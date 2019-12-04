@@ -5,17 +5,9 @@
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores
 ##
-## Thomas Muench, 10/2019
-##
 
 # ------------------------------------------------------------------------------
-# Set path to your base directory of "optimalcores"
-
-path <- "~/research/awi/comb-i/echam-wiso/optimalcores"
-
-
-# ------------------------------------------------------------------------------
-# Load all required packages
+# Load required packages
 
 if (!require("ecustools", quietly = TRUE)) {
   stop("Package \"ecustools\" needed for \"optimalcores\".",
@@ -49,5 +41,5 @@ sourceDir <- function (path, trace = TRUE, local = FALSE, ...) {
 # ------------------------------------------------------------------------------
 # Source the "optimalcores" library directory
 
-sourceDir(file.path(path, "lib"))
+sourceDir("lib")
 
