@@ -9,8 +9,8 @@
 # ------------------------------------------------------------------------------
 # Load required packages
 
-if (!require("ecustools", quietly = TRUE)) {
-  stop("Package \"ecustools\" needed for \"optimalcores\".",
+if (!require("abind", quietly = TRUE)) {
+  stop("Package \"abind\" needed for \"optimalcores\".",
        call. = FALSE)
 }
 
@@ -19,8 +19,8 @@ if (!require("arrangements", quietly = TRUE)) {
        call. = FALSE)
 }
 
-if (!require("abind", quietly = TRUE)) {
-  stop("Package \"abind\" needed for \"optimalcores\".",
+if (!require("pfields", quietly = TRUE)) {
+  stop("Package \"pfields\" needed for \"optimalcores\".",
        call. = FALSE)
 }
 

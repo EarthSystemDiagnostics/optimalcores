@@ -26,7 +26,7 @@
 ##' * \code{lnd.prc}: as above but only for continental Antarctic sites.
 ##' The first five list elements are \code{"pField"} objects, the latter five
 ##' are \code{"pTs"} objects.
-##' @seealso \code{\link[ecustools]{pField}}, \code{\link[ecustools]{pTs}}
+##' @seealso \code{\link[pfields]{pField}}, \code{\link[pfields]{pTs}}
 ##' @author Thomas Münch
 selectData <- function(data = "past1000") {
 
@@ -78,7 +78,7 @@ selectData <- function(data = "past1000") {
 ##'
 ##' Select a target site (i.e. a certain grid cell) from a spatial field based
 ##' on latidude and longitude coordinates.
-##' @param field a \code{\link[ecustools]{pField}} object with the spatial field
+##' @param field a \code{\link[pfields]{pField}} object with the spatial field
 ##' of a certain variable.
 ##' @param site a length-one character vector giving a shorthand ID for the
 ##' requested target site; see details for a list of implemented sites; defaults
@@ -99,14 +99,14 @@ selectData <- function(data = "past1000") {
 ##'
 ##' The actual target site is set to the nearest grid cell of the spatial
 ##' \code{field} based on the distance minimization approach in
-##' \code{\link[ecustools]{SelPoint}}.
+##' \code{\link[pfields]{SelPoint}}.
 ##'
 ##' Note that the output field of distances relative to the target site only
 ##' refers to continental Antarctic sites.
 ##' @return A named list of the following four elements:
 ##' * "dat":  the time series at the specified target site.
 ##' * "lat0": latitude of actual grid cell used closest to the requested site.
-##' * "lin0": longitude of actual grid cell used closest to the requested site.
+##' * "lon0": longitude of actual grid cell used closest to the requested site.
 ##' * "dist": 2D array with distances relative to the target site of the grid
 ##'           cells in \code{field}.
 ##' @author Thomas Münch
@@ -149,10 +149,10 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
 
   res <- list()
   
-  res$dat <- ecustools::SelPoint(field, lat = lat0, lon = lon0)
+  res$dat <- pfields::SelPoint(field, lat = lat0, lon = lon0)
 
-  res$lat0 <- ecustools::GetLat(res$dat)
-  res$lon0 <- ecustools::GetLon(res$dat)
+  res$lat0 <- pfields::GetLat(res$dat)
+  res$lon0 <- pfields::GetLon(res$dat)
 
   if (res$lon0 >= 180) res$lon0 <- res$lon0 - 360
 
@@ -163,7 +163,7 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
   if (length(i.sel == ncol(field))) {
     # is pField
     res$dist <-
-      ecustools::GetDistanceField(field,
+      pfields::GetDistanceField(field,
                                   lat = lat0, lon = lon0,
                                   get.nearest = TRUE)
     
@@ -171,8 +171,8 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
     # is pTs
     res$dist <-
       ecustools::GetDistance(lat0 = lat0, lon0 = lon0,
-                             lat = ecustools::GetLat(field[, i.sel]),
-                             lon = ecustools::GetLon(field[, i.sel]),
+                             lat = pfields::GetLat(field[, i.sel]),
+                             lon = pfields::GetLon(field[, i.sel]),
                              get.nearest = TRUE)
 
   }
