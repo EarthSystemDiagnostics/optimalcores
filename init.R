@@ -38,3 +38,10 @@ sourceDir <- function (path, trace = TRUE, local = FALSE, ...) {
 
 sourceDir("lib")
 
+
+# ------------------------------------------------------------------------------
+# Global settings
+
+# directory for saving plots
+SAVEPATH <- "~/paper/cp_echam5-mpiom-wiso/plots"
+
