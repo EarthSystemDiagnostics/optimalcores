@@ -9,19 +9,14 @@
 # ------------------------------------------------------------------------------
 # Load required packages
 
-if (!require("abind", quietly = TRUE)) {
-  stop("Package \"abind\" needed for \"optimalcores\".",
-       call. = FALSE)
-}
+required.packages <- c("abind", "arrangements", "ecustools", "pfields")
 
-if (!require("arrangements", quietly = TRUE)) {
-  stop("Package \"arrangements\" needed for \"optimalcores\".",
-       call. = FALSE)
-}
+for (pkg in required.packages) {
 
-if (!require("pfields", quietly = TRUE)) {
-  stop("Package \"pfields\" needed for \"optimalcores\".",
-       call. = FALSE)
+  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+    stop(sprintf("Package \"%s\" needed for \"optimalcores\". ", pkg),
+         "Please install it.", call. = FALSE)
+  }
 }
 
 
