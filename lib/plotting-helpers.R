@@ -46,7 +46,6 @@ Quartz <- function(file = NULL, type = "native",
 
     # Open device
     quartz(height = height, width = width, file = file, type = type, ...)
-    par(plot.par)
 
 }
 
