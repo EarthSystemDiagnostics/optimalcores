@@ -181,3 +181,67 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
 
 }
 
+##' Set target region
+##'
+##' Select those grid cells from a \code{"pfield"} or \code{"pTs"} object that
+##' lie within a defined latitude-longitude region.
+##' @param field a \code{"pfield"} or \code{"pTs"} object; see
+##' \code{\link[pfields]{pField}} and \code{\link[pfields]{pTs}}.
+##' @param min.lat the minimum latitude of the region.
+##' @param max.lat the maximum latitude of the region.
+##' @param min.lon the minimum longitude of the region.
+##' @param max.lon the maximum longitude of the region.
+##' @param verbose logical; if \code{TRUE} (default), prints a message giving
+##'   the distance in km between the midpoint of the defined region and its
+##'   outer corners.
+##' @return a data frame with three columns giving the indices
+##'   (\code{field.indices}) of the grid cells of \code{field} that lie within
+##'   the defined region and their latitude (\code{lat}) and longitudes
+##'   (\code{lon}).
+##' @author Thomas Münch
+setTargetRegion <- function(field,
+                            min.lat = -80, max.lat = -70,
+                            min.lon = -17.5, max.lon = 17.5,
+                            verbose = TRUE) {
+
+  if (pfields::is.pField(field)) {
+    coord.field <- pfields::GetLatLonField(field)
+    lats <- coord.field$lat2d
+    lons <- coord.field$lon2d
+  } else if (pfields::is.pTs(field)) {
+    lats <- pfields::GetLat(field)
+    lons <- pfields::GetLon(field)
+  } else {
+    stop("'field' whether pField nor pTs object.")
+  }
+
+  lons[lons > 180] <- lons[lons > 180] - 360
+
+  i <- which(lons >= min.lon & lons <= max.lon)
+
+  lons <- lons[i]
+  lats <- lats[i]
+
+  i <- which(lats >= min.lat & lats <= max.lat)
+
+  lons <- lons[i]
+  lats <- lats[i]
+
+  # distances from midpoint to x/y border of defined region
+  mid.lat <- (min.lat + max.lat) / 2
+  mid.lon <- (min.lon + max.lon) / 2
+  x <- ecustools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
+  y <- ecustools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
+
+  midpoint.border.distances <- c(x = x, y = y)
+  cat(sprintf("Midpoint-border distances:\nx = %4.0f, y = %4.0f.\n",
+              midpoint.border.distances["x"],
+              midpoint.border.distances["y"]))
+
+  lons[lons < 0] <- lons[lons < 0] + 360
+  coordinates <- data.frame(field.indices = i, lat = lats, lon = lons)
+
+  return(coordinates)
+
+}
+
