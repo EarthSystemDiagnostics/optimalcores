@@ -13,8 +13,10 @@
 ##'   \code{target.field}.
 ##' @param target.field a \code{"pField"} object from which the grid cells
 ##'   defined in \code{region} are to be selected as target sites.
-##' @param study.field a \code{"pTs"} object with a climate field for which the
-##'   correlations with the target sites are to be calculated.
+##' @param study.field a \code{"pField"} or \code{"pTs"} object with a climate
+##'   field for which the correlations with the target sites are to be
+##'   calculated. Its grid structure must match the structure of the distance
+##'   field obtained from selecting a target site from the \code{target.field}.
 ##' @param N integer; the number of grid cells to average before computing the
 ##'   correlation to the target.
 ##' @param max.dist the maximum distance of the outer ring (in km).
@@ -47,21 +49,27 @@ analyseTargetRegion <- function(region, target.field, study.field, N = 1,
     }
 
     if (N == 1) {
-      tmp <- SampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
+      tmp <- sampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
                                 field = study.field,
-                                target.lst = target.site)
+                                target = target.site$x,
+                                distance.field = target.site$dist)
     } else if (N == 2) {
-      tmp <- SampleTwoFromRings(field = study.field,
-                                target.lst = target.site)
+      tmp <- sampleTwoFromRings(max.dist = max.dist, delta.d = delta.d,
+                                field = study.field,
+                                target = target.site$x,
+                                distance.field = target.site$dist)
     } else {
-      tmp <- SampleNFromRings(N = N, field = study.field,
-                              target.lst = target)
+      tmp <- sampleNFromRings(max.dist = max.dist, delta.d = delta.d,
+                              N = N, nmc = nmc,
+                              field = study.field,
+                              target = target.site$x,
+                              distance.field = target.site$dist)
     }
 
     if (N == 1) {
-      res[[i]] <- ProcessSingles(tmp)
+      res[[i]] <- processSingles(tmp)
     } else {
-      res[[i]] <- ProcessNCores(tmp)
+      res[[i]] <- processNCores(tmp)
     }
 
   }
