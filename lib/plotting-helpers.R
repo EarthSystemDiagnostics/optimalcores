@@ -35,17 +35,17 @@
 Quartz <- function(file = NULL, type = "native",
                    height = 6, width = 8, ...) {
 
-    # Determine file type from file extension
-    if (!is.null(file)) {
+  # Determine file type from file extension
+  if (!is.null(file)) {
 
-        type <- tools::file_ext(file)
-        if (nchar(type) == 0)
-            stop("No file extension found for setting 'type'.")
-        
-    }
+    type <- tools::file_ext(file)
+    if (nchar(type) == 0)
+      stop("No file extension found for setting 'type'.")
+    
+  }
 
-    # Open device
-    quartz(height = height, width = width, file = file, type = type, ...)
+  # Open device
+  quartz(height = height, width = width, file = file, type = type, ...)
 
 }
 
@@ -82,7 +82,7 @@ LoadGraphicsPar <- function(mar = c(5, 5, 0.5, 0.5), lwd = 1, las = 1,
                             font.lab = 1, font.axis = 1, cex.main = 1.5,
                             cex.lab = 1.5, cex.axis = 1.25, ...) {
 
-    par <- c(as.list(environment()), list(...))
-    return(par)
+  par <- c(as.list(environment()), list(...))
+  return(par)
 
 }

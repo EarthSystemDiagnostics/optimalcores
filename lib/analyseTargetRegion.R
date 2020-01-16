@@ -32,40 +32,40 @@ analyseTargetRegion <- function(region, target.field, study.field, N = 1,
                                 max.dist = 2000, delta.d = 250, nmc = 100,
                                 verbose = FALSE) {
     
-    res <- list()
-    for (i in 1 : nrow(region)) {
+  res <- list()
+  for (i in 1 : nrow(region)) {
 
-        target.site <- setTarget(field = target.field, site = NULL,
-                                 lat0 = region$lat[i],
-                                 lon0 = region$lon[i])
+    target.site <- setTarget(field = target.field, site = NULL,
+                             lat0 = region$lat[i],
+                             lon0 = region$lon[i])
 
-        if (verbose) {
-            cat(sprintf("Run %i/%i:\n", i, nrow(region)))
-            cat(sprintf("lat = %2.2f\n", target.site$lat0))
-            cat(sprintf("lon = %2.2f\n", target.site$lon0))
-            cat("\n")
-        }
-
-        if (N == 1) {
-            tmp <- SampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
-                                      field = study.field,
-                                      target.lst = target.site)
-        } else if (N == 2) {
-            tmp <- SampleTwoFromRings(field = study.field,
-                                      target.lst = target.site)
-        } else {
-            tmp <- SampleNFromRings(N = N, field = study.field,
-                                    target.lst = target)
-        }
-
-        if (N == 1) {
-            res[[i]] <- ProcessSingles(tmp)
-        } else {
-            res[[i]] <- ProcessNCores(tmp)
-        }
-
+    if (verbose) {
+      cat(sprintf("Run %i/%i:\n", i, nrow(region)))
+      cat(sprintf("lat = %2.2f\n", target.site$lat0))
+      cat(sprintf("lon = %2.2f\n", target.site$lon0))
+      cat("\n")
     }
 
-    return(res)
-    
+    if (N == 1) {
+      tmp <- SampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
+                                field = study.field,
+                                target.lst = target.site)
+    } else if (N == 2) {
+      tmp <- SampleTwoFromRings(field = study.field,
+                                target.lst = target.site)
+    } else {
+      tmp <- SampleNFromRings(N = N, field = study.field,
+                              target.lst = target)
+    }
+
+    if (N == 1) {
+      res[[i]] <- ProcessSingles(tmp)
+    } else {
+      res[[i]] <- ProcessNCores(tmp)
+    }
+
+  }
+
+  return(res)
+  
 }
