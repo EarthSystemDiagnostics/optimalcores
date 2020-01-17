@@ -7,6 +7,7 @@
 
 install.packages("abind")
 install.packages("arrangements")
+install.packages("magrittr")
 install.packages("RColorBrewer")
 
 devtools::install_github("EarthSystemDiagnostics/ecustools")
