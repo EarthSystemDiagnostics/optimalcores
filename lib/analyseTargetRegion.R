@@ -67,11 +67,7 @@ analyseTargetRegion <- function(region, target.field, study.field, N = 1,
                               distance.field = target.site$dist)
     }
 
-    if (N == 1) {
-      res[[i]] <- processSingles(tmp)
-    } else {
-      res[[i]] <- processNCores(tmp)
-    }
+    res[[i]] <- processCores(tmp)
 
   }
 
