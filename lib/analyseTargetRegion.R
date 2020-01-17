@@ -8,6 +8,7 @@
 ##' If N = 1, the time series are sampled from the individual rings. For N > 1,
 ##' the time series are sampled from rings iterating through all possibilities
 ##' of combining N rings.
+##'
 ##' @param region a data frame of coordinate indices and latitude-longitude
 ##'   values defining a subset region of the climate field in
 ##'   \code{target.field}.
@@ -25,7 +26,7 @@
 ##' sites, i.e. for \code{N} > 2.
 ##' @param verbose logical; if \code{TRUE}, print a progess message giving
 ##'   the number of the currently analysed target site of the \code{region} and
-##' its latitude and longitude; defaults to \code{FALSE}.
+##'   its latitude and longitude; defaults to \code{FALSE}.
 ##' @return The return value depends on the number of averaged sites: if {N} =
 ##'   1, it is the output of \code{\link{processSingles}}, else the output of
 ##'   \code{\link{processNCores}}.
@@ -51,18 +52,18 @@ analyseTargetRegion <- function(region, target.field, study.field, N = 1,
     if (N == 1) {
       tmp <- sampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
                                 field = study.field,
-                                target = target.site$x,
+                                target = target.site$dat,
                                 distance.field = target.site$dist)
     } else if (N == 2) {
       tmp <- sampleTwoFromRings(max.dist = max.dist, delta.d = delta.d,
                                 field = study.field,
-                                target = target.site$x,
+                                target = target.site$dat,
                                 distance.field = target.site$dist)
     } else {
       tmp <- sampleNFromRings(max.dist = max.dist, delta.d = delta.d,
                               N = N, nmc = nmc,
                               field = study.field,
-                              target = target.site$x,
+                              target = target.site$dat,
                               distance.field = target.site$dist)
     }
 

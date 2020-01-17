@@ -160,7 +160,7 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
   i.sel <- which(apply(field, 2, function(c){!all(is.na(c))}))
 
   # check whether subset field is pField or pTs
-  if (length(i.sel == ncol(field))) {
+  if (length(i.sel) == ncol(field)) {
     # is pField
     res$dist <-
       pfields::GetDistanceField(field,
