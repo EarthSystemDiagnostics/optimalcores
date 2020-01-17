@@ -37,6 +37,5 @@ sourceDir <- function (path, trace = TRUE, local = FALSE, ...) {
 # ------------------------------------------------------------------------------
 # Source the "optimalcores" library directory
 
-setwd(SRCPATH)
 sourceDir("lib")
 
