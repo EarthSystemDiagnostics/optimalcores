@@ -9,8 +9,8 @@
 # ------------------------------------------------------------------------------
 # Load required packages
 
-required.packages <- c("abind", "arrangements", "ecustools", "pfields",
-                       "RColorBrewer")
+required.packages <- c("abind", "arrangements", "ecustools", "magrittr",
+                       "pfields", "RColorBrewer")
 
 for (pkg in required.packages) {
 
