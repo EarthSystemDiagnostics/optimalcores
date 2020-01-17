@@ -6,7 +6,6 @@
 ## Muench, Werner and Laepple (2019), in prep.
 ##
 
-setwd(path <- "~/research/awi/comb-i/echam-wiso/optimalcores")
 source("init.R")
 
 library(ggplot2)
