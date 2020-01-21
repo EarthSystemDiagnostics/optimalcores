@@ -111,7 +111,8 @@ label <- c(expression(italic("T")["2m"]),
            expression(delta^{18} * "O"),
            expression(delta^{18} * "O"^{"(pw)"}))
 
-Quartz(file.path(SAVEPATH, "echam5_mpiom_wiso_fig_correlation_distance.pdf"))
+Quartz(file.path(SAVEPATH, "main",
+                 "echam5_mpiom_wiso_fig_correlation_distance.pdf"))
 par(LoadGraphicsPar())
 
 plot(t2m$ring.distances, t2m$cor, type = "n",
