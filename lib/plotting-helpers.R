@@ -86,3 +86,92 @@ LoadGraphicsPar <- function(mar = c(5, 5, 0.5, 0.5), lwd = 1, las = 1,
   return(par)
 
 }
+
+##' Plot picking results
+##'
+##' Create a ggplot2 plot with the locations of N picked cores (grid cells)
+##' plotted on top of the map of correlations between the target time series and
+##' all grid cells of the model data field from which the cores were picked.
+##'
+##' @param data the output of \code{\link{pickNCores}}.
+##' @param N integer; the number of picked cores. Determines which result to
+##'   plot from \code{data}.
+##' @param cor.min numeric; lower correlation value to set as threshold for the
+##'   correlation map (for visual puropses, all lower values are set to this
+##'   value in the plotted map).
+##' @param cor.max numeric; upper correlation value to use in the colour scale
+##'   of the map plot.
+##' @param min.lon numeric; minimum longitude to plot.
+##' @param max.lon numeric; maximum longitude to plot.
+##' @param colour.scale vector of colours to use for the correlation map.
+##' @param name name for the colour bar legend; defaults to "Correlation".
+##' @param guide logical; should the colour bar legend be plotted?
+##' @return a ggplot2 object.
+##' @author Thomas Münch
+plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
+                        min.lon, max.lon, colour.scale,
+                        name = "Correlation", guide = TRUE) {
+
+  Ncores <- sapply(data$picking, function(x) {x$N})
+  i <- which(Ncores == N)
+
+  # correlation field as data frame, and crop
+  map <- pField2df(data$correlation.map,
+                   lon.min = min.lon, lon.max = max.lon)
+
+  # constrain correlation range for visual purposes
+  map$dat[map$dat < cor.min] <- cor.min
+
+  picking <- data$picking[[i]]
+
+  p <- ggplot()
+
+  p <- p +
+
+    geom_tile(aes(x = lon, y = lat, fill = dat),
+              data = map, colour = "transparent") +
+
+    geom_point(data = data$target, aes(x = lon, y = lat),
+               col = "black", size = 5, pch = 3, stroke = 1.5) +
+
+    geom_point(data = picking$sample, aes(x = lon, y = lat),
+               col = "black", size = 4, pch = 19)
+
+  if (guide) {
+
+    p <- p +
+
+      scale_fill_gradientn(colours = colour.scale,
+                           na.value = "transparent",
+                           limits = c(cor.min, cor.max),
+                           name = name)
+  } else {
+
+    p <- p +
+
+      scale_fill_gradientn(colours = colour.scale,
+                           na.value = "transparent",
+                           limits = c(cor.min, cor.max),
+                           name = name, guide = guide)
+  }
+
+  p <- p +
+
+    theme(legend.key.height = unit(0.75, units = "inches"),
+          legend.text = element_text(size = 18),
+          legend.title = element_text(size = 18),
+          text = element_text(size = 18))
+
+  p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+                          n.lat.labels = 3,
+                          min.lon = min.lon, max.lon = max.lon, rotate = TRUE,
+                          longitude.spacing = 30,
+                          land.fill.colour = "transparent",
+                          size.outer = 0.5,
+                          lat.ax.labs.pos = min.lon - c(5, 10),
+                          ax.labs.size = 4.75,
+                          data.layer = p)
+
+  p
+
+}
