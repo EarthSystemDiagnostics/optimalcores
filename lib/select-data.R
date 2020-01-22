@@ -222,10 +222,10 @@ setTargetRegion <- function(field,
   lons <- lons[i]
   lats <- lats[i]
 
-  i <- which(lats >= min.lat & lats <= max.lat)
+  j <- which(lats >= min.lat & lats <= max.lat)
 
-  lons <- lons[i]
-  lats <- lats[i]
+  lons <- lons[j]
+  lats <- lats[j]
 
   # distances from midpoint to x/y border of defined region
   mid.lat <- (min.lat + max.lat) / 2
@@ -239,7 +239,7 @@ setTargetRegion <- function(field,
               midpoint.border.distances["y"]))
 
   lons[lons < 0] <- lons[lons < 0] + 360
-  coordinates <- data.frame(field.indices = i, lat = lats, lon = lons)
+  coordinates <- data.frame(field.indices = i[j], lat = lats, lon = lons)
 
   return(coordinates)
 
