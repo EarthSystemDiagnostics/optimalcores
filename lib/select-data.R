@@ -228,15 +228,18 @@ setTargetRegion <- function(field,
   lats <- lats[j]
 
   # distances from midpoint to x/y border of defined region
-  mid.lat <- (min.lat + max.lat) / 2
-  mid.lon <- (min.lon + max.lon) / 2
-  x <- ecustools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
-  y <- ecustools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
+  if (verbose) {
 
-  midpoint.border.distances <- c(x = x, y = y)
-  cat(sprintf("Midpoint-border distances:\nx = %4.0f, y = %4.0f.\n",
-              midpoint.border.distances["x"],
-              midpoint.border.distances["y"]))
+    mid.lat <- (min.lat + max.lat) / 2
+    mid.lon <- (min.lon + max.lon) / 2
+    x <- ecustools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
+    y <- ecustools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
+
+    midpoint.border.distances <- c(x = x, y = y)
+    cat(sprintf("Midpoint-border distances:\nx = %4.0f, y = %4.0f.\n",
+                midpoint.border.distances["x"],
+                midpoint.border.distances["y"]))
+  }
 
   lons[lons < 0] <- lons[lons < 0] + 360
   coordinates <- data.frame(field.indices = i[j], lat = lats, lon = lons)
