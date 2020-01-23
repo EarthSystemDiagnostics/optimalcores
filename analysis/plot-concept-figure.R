@@ -33,8 +33,7 @@ rings <- do.call(rbind, df.lst)
 # ------------------------------------------------------------------------------
 # Plotting
 
-Quartz(file.path(SAVEPATH, "main", "echam5_mpiom_wiso_fig_01.pdf"),
-       height = 6, width = 6)
+Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"), height = 6, width = 6)
 op <- par(LoadGraphicsPar())
 
 p <- ggplot()

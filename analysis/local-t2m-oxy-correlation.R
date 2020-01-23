@@ -35,7 +35,8 @@ pfields::SelPoint(correlation.field, lat = -78.47, lon = 106.83)
 # set colour scale
 col.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
 
-Quartz(file.path(SAVEPATH, "main", "echam5_mpiom_wiso_fig_03.pdf"),
+Quartz(file.path(SAVEPATH, "main",
+                 "echam5_mpiom_wiso_local_t2m_oxypw_correlation.pdf"),
        height = 6, width = 6)
 op <- par(LoadGraphicsPar())
 
