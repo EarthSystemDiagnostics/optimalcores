@@ -44,7 +44,7 @@ p <- p +
     scale_fill_gradientn(colours = col.scale,
                          na.value = "transparent",
                          limits = c(500, 2500),
-                         name = bquote(tau * " (km)")) +
+                         name = bquote(tau * " (km)        ")) +
 
     theme(legend.key.height = unit(0.75, units = "inches"),
           legend.text = element_text(size = 15),
