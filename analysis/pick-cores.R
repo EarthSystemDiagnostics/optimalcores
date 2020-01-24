@@ -123,3 +123,39 @@ egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3)
 
 dev.copy2pdf(file = file.path(SAVEPATH, "main", "echam5_mpiom_wiso_picking.pdf"))
 
+# ------------------------------------------------------------------------------
+# distance of optimal single core from the target; all Antarctic sites
+
+nmc <- 1e3
+
+continental.latitudes  <- GetLat(model$lnd.t2m)
+continental.longitudes <- GetLon(model$lnd.t2m)
+
+optimal.distances <- numeric(length = ncol(model$lnd.t2m))
+
+for (i in 1 : ncol(model$lnd.t2m)) {
+
+  print(i)
+
+  lat0 <- continental.latitudes[i]
+  lon0 <- continental.longitudes[i]
+
+  site <- pickNCores(N = 1, target = NULL, lat0 = lat0, lon0 = lon0,
+                     target.field = model$t2m, study.field = model$lnd.oxy.pw,
+                     nmc = nmc, return.all = FALSE)
+
+  optimal.distances[i] <- GetDistance(lat0, lon0,
+                                      site$picking[[1]]$sample$lat,
+                                      site$picking[[1]]$sample$lon)
+
+}
+
+Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"))
+op <- par(LoadGraphicsPar())
+
+hist(optimal.distances, breaks = seq(0, 1000, 50),
+     main = "", xlab = "Distance from target (km)", ylab = "Counts",
+     col = "darkgrey", border = "dimgrey")
+
+dev.off()
+par(op)
