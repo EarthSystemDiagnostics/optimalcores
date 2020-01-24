@@ -112,7 +112,12 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##' @param N an integer vector with a set of N cores to pick.
 ##' @param target a character string with the name of the target site, as
 ##'   used by \code{\link{setTarget}}, which defines the centre of the circle
-##'   from which the cores are picked.
+##'   from which the cores are picked; set to \code{NULL} to directly specify
+##'   target coordinates.
+##' @param lat0 numeric; (optional) latitude of the target site if no
+##'   \code{target} name is specified.
+##' @param lon0 numeric; (optional) longitude of the target site if no
+##'   \code{target} name is specified.
 ##' @param radius numeric; the radius (in km) of the circle around the target
 ##'   site from which the cores are to be picked.
 ##' @param target.field a \code{"pField"} object with the spatial field (matrix)
@@ -143,18 +148,19 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##'   * "picking": a list the same length as \code{N}; each list element is the
 ##'     output of \code{\link{doPicking}}.
 ##' @author Thomas Münch
-pickNCores <- function(N = 1, target = "edml", radius = 1000,
-                       target.field, study.field,
+pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
+                       radius = 1000, target.field, study.field,
                        nmc = 1000, replace = FALSE,
                        COSTFUN = cor, ..., maximize = TRUE,
                        return.all = TRUE) {
 
-  target.site <- setTarget(target.field, site = target)
+  target.site <- setTarget(target.field, site = target,
+                           lat0 = lat0, lon0 = lon0)
 
   correlation.map <- pfields::cor.pTs(target.site$dat, study.field)
 
   target.coord <- data.frame(
-    name = target,
+    name = if (is.null(target)) "site i" else target,
     lat  = target.site$lat0,
     lon  = target.site$lon0
   )
