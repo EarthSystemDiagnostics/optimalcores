@@ -33,76 +33,41 @@ triples <- sampleNFromRings(N = 3, field = model$lnd.t2m, target = target$dat,
            processCores()
 
 # ------------------------------------------------------------------------------
-# t2m
+# wrapper function to assess spatial correlation structure
 
-study.field <- model$lnd.t2m
+runSpatialCorrelation <- function(region, target.field, study.field) {
 
-run <- analyseTargetRegion(region = dml, target.field = model$t2m,
-                           study.field = study.field, N = 1)
+  run <- analyseTargetRegion(region = region, target.field = target.field,
+                             study.field = study.field, N = 1)
 
-t2m <- data.frame(
+  prc <- data.frame(
   
-  ring.distances = run[[1]]$ring.distances.sampled$core1,
+    ring.distances = run[[1]]$ring.distances.sampled$core1,
 
-  cor = run %>%
-    sapply(function(x) {x$correlation$mean}) %>%
-    apply(1, mean)
+    cor = run %>%
+      sapply(function(x) {x$correlation$mean}) %>%
+      apply(1, mean)
 
-)
+  )
+
+  return(prc)
+
+}
 
 # ------------------------------------------------------------------------------
-# t2m.pw
+# determine DML correlation structure for t2m, t2m.pw, oxy and oxy.pw
 
-study.field <- model$lnd.t2m.pw
+t2m    <- runSpatialCorrelation(region = dml, target.field = model$t2m,
+                                study.field = model$lnd.t2m)
 
-run <- analyseTargetRegion(region = dml, target.field = model$t2m,
-                           study.field = study.field, N = 1)
+t2m.pw <- runSpatialCorrelation(region = dml, target.field = model$t2m,
+                                study.field = model$lnd.t2m.pw)
 
-t2m.pw <- data.frame(
-  
-  ring.distances = run[[1]]$ring.distances.sampled$core1,
+oxy    <- runSpatialCorrelation(region = dml, target.field = model$t2m,
+                                study.field = model$lnd.oxy)
 
-  cor = run %>%
-    sapply(function(x) {x$correlation$mean}) %>%
-    apply(1, mean)
-
-)
-
-# ------------------------------------------------------------------------------
-# oxy
-
-study.field <- model$lnd.oxy
-
-run <- analyseTargetRegion(region = dml, target.field = model$t2m,
-                           study.field = study.field, N = 1)
-
-oxy <- data.frame(
-  
-  ring.distances = run[[1]]$ring.distances.sampled$core1,
-
-  cor = run %>%
-    sapply(function(x) {x$correlation$mean}) %>%
-    apply(1, mean)
-
-)
-
-# ------------------------------------------------------------------------------
-# oxy.pw
-
-study.field <- model$lnd.oxy.pw
-
-run <- analyseTargetRegion(region = dml, target.field = model$t2m,
-                           study.field = study.field, N = 1)
-
-oxy.pw <- data.frame(
-  
-  ring.distances = run[[1]]$ring.distances.sampled$core1,
-
-  cor = run %>%
-    sapply(function(x) {x$correlation$mean}) %>%
-    apply(1, mean)
-
-)
+oxy.pw <- runSpatialCorrelation(region = dml, target.field = model$t2m,
+                                study.field = model$lnd.oxy.pw)
 
 # ------------------------------------------------------------------------------
 # Plotting
