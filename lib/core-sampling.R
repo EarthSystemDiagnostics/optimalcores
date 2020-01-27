@@ -45,6 +45,38 @@ getRingGrids <- function(dist.start = 0, delta.d = 250, distance.field) {
 
 }
 
+##' Produce symmetric data matrix
+##'
+##' Produce a symmetric matrix of data sampled from the same bins in two
+##' dimensions.
+##'
+##' @param input a list of two elements:
+##'   * "bins": numeric vector with the set of possible bins from which the data
+##'     could sampled.
+##'   * "samples": a list or data frame of three elements/columns of equal
+##'     length 'n', where the first (second) element are the actual bins from
+##'     which the data has been sampled in the first (second) dimension, and the
+##'     third element is the data.
+##' @return a symmetric 'n' x 'n' matrix filled with the data.
+##' @author Thomas Münch
+data2matrix <- function(input) {
+
+  res <- matrix(nrow = length(input$bins), ncol = length(input$bins))
+  for (i in 1 : nrow(input$samples)) {
+
+    m <- match(input$samples[[1]][i], input$bins)
+    n <- match(input$samples[[2]][i], input$bins)
+
+    res[m, n] <- input$samples[[3]][i]
+  }
+
+  # make matrix symmetric
+  res[lower.tri(res)] <- t(res)[lower.tri(res)]
+
+  return(res)
+
+}
+
 # ------------------------------------------------------------------------------
 # SAMPLING FUNCTIONS
 
@@ -466,3 +498,31 @@ processCores <- function(input, probs = 1/3, upper.quantile = 0.95) {
 
 }
 
+##' Process regional mean correlation structure
+##'
+##' Compute the average correlation across results obtained from sampling ring
+##' bins for several target sites in a region.
+##'
+##' @param input a list with the results from running \code{analyseTargetRegion}.
+##' @return a list of two elements:
+##'   * "bins": numeric vector with the midpoint distances of the possible ring
+##'     bins from which grid cells could be sampled.
+##'   * "samples": a data frame with, for each ring bin combination, the
+##'     midpoint distances of the sampled ring bins and the average correlation
+##'     across all analysed target sites.
+##' @author Thomas Münch
+processRegionalMean <- function(input) {
+
+  res <- list(
+
+       bins = input[[1]]$input$ring.distances,
+    samples = input[[1]]$ring.distances.sampled
+  )
+
+  res$samples$cor = input %>%
+    sapply(function(x) {x$correlation$mean}) %>%
+    apply(1, mean)
+
+  return(res)
+
+}
