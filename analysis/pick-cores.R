@@ -126,7 +126,7 @@ dev.copy2pdf(file = file.path(SAVEPATH, "main", "echam5_mpiom_wiso_picking.pdf")
 # ------------------------------------------------------------------------------
 # distance of optimal single core from the target; all Antarctic sites
 
-nmc <- 1e3
+nmc <- 5e3
 
 continental.latitudes  <- GetLat(model$lnd.t2m)
 continental.longitudes <- GetLon(model$lnd.t2m)
@@ -153,9 +153,11 @@ for (i in 1 : ncol(model$lnd.t2m)) {
 Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"))
 op <- par(LoadGraphicsPar())
 
-hist(optimal.distances, breaks = seq(0, 1000, 50),
-     main = "", xlab = "Distance from target (km)", ylab = "Counts",
-     col = "darkgrey", border = "dimgrey")
+phist <- hist(optimal.distances, breaks = seq(0, 1000, 50),
+              main = "", xlab = "Distance from target (km)", ylab = "Counts",
+              col = "darkgrey", border = "dimgrey")
 
 dev.off()
 par(op)
+
+sum(phist$counts[c(9 : 12, 17 : 20)]) / sum(phist$counts)
