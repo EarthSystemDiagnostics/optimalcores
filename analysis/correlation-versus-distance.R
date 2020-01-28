@@ -33,41 +33,25 @@ triples <- sampleNFromRings(N = 3, field = model$lnd.t2m, target = target$dat,
            processCores()
 
 # ------------------------------------------------------------------------------
-# wrapper function to assess spatial correlation structure
+# Determine DML correlation structure for t2m, t2m.pw, oxy and oxy.pw
 
-runSpatialCorrelation <- function(region, target.field, study.field) {
+target.field <- model$t2m
 
-  run <- analyseTargetRegion(region = region, target.field = target.field,
-                             study.field = study.field, N = 1)
+t2m <- dml %>%
+  analyseTargetRegion(target.field, study.field = model$lnd.t2m) %>%
+  processRegionalMean()
 
-  prc <- data.frame(
-  
-    ring.distances = run[[1]]$ring.distances.sampled$core1,
+t2m.pw <- dml %>%
+  analyseTargetRegion(target.field, study.field = model$lnd.t2m.pw) %>%
+  processRegionalMean()
 
-    cor = run %>%
-      sapply(function(x) {x$correlation$mean}) %>%
-      apply(1, mean)
+oxy <- dml %>%
+  analyseTargetRegion(target.field, study.field = model$lnd.oxy) %>%
+  processRegionalMean()
 
-  )
-
-  return(prc)
-
-}
-
-# ------------------------------------------------------------------------------
-# determine DML correlation structure for t2m, t2m.pw, oxy and oxy.pw
-
-t2m    <- runSpatialCorrelation(region = dml, target.field = model$t2m,
-                                study.field = model$lnd.t2m)
-
-t2m.pw <- runSpatialCorrelation(region = dml, target.field = model$t2m,
-                                study.field = model$lnd.t2m.pw)
-
-oxy    <- runSpatialCorrelation(region = dml, target.field = model$t2m,
-                                study.field = model$lnd.oxy)
-
-oxy.pw <- runSpatialCorrelation(region = dml, target.field = model$t2m,
-                                study.field = model$lnd.oxy.pw)
+oxy.pw <- dml %>%
+  analyseTargetRegion(target.field, study.field = model$lnd.oxy.pw) %>%
+  processRegionalMean()
 
 # ------------------------------------------------------------------------------
 # Plotting
@@ -76,21 +60,24 @@ label <- c(expression(italic("T")["2m"]),
            expression(delta^{18} * "O"),
            expression(delta^{18} * "O"^{"(pw)"}))
 
+col1 <- "black"
+col2 <- "green4"
+col3 <- "dodgerblue3"
+
 Quartz(file.path(SAVEPATH, "main", "fig_03.pdf"))
 par(LoadGraphicsPar())
 
-plot(t2m$ring.distances, t2m$cor, type = "n",
+plot(t2m$bins, t2m$samples$cor, type = "n",
      xlab = "", ylab = "",
      xlim = c(0, 2125), ylim = c(0, 1))
 mtext("Distance (km)", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
 
-lines(t2m$ring.distances, t2m$cor, col = "black", type = "b", lwd = 2.5)
-lines(oxy$ring.distances, oxy$cor, col = "green4", type = "b", lwd = 2.5)
-lines(oxy.pw$ring.distances, oxy.pw$cor, col = "dodgerblue3", type = "b", lwd = 2.5)
+lines(t2m$bins, t2m$samples$cor, col = col1, type = "b", lwd = 2.5)
+lines(oxy$bins, oxy$samples$cor, col = col2, type = "b", lwd = 2.5)
+lines(oxy.pw$bins, oxy.pw$samples$cor, col = col3, type = "b", lwd = 2.5)
 
-legend("topright", label,
-       col = c("black", "green4", "dodgerblue3"),
+legend("topright", label, col = c(col1, col2, col3),
        lty = 1, lwd = 2.5, bty = "n")
 
 dev.off()
