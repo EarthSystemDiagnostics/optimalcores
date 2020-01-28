@@ -189,10 +189,11 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
 ##'   \code{corelation}.
 ##' @param color.palette a colour palette function to be used to assign colors
 ##'   in the plot.
-##' @param zlim correlation limits for the plot.
+##' @param zlim correlation limits for the plot. If \code{NULL} use default
+##'   values from \code{filled.contour}.
 ##' @author Thomas Münch
 plotCorrelationContours <- function(correlation, distances, color.palette,
-                                    zlim = c(0, 1)) {
+                                    zlim = NULL) {
 
   if (diff(dim(correlation)) != 0) {
     stop("Correlation input is not a square matrix.")
@@ -200,6 +201,8 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
   if (nrow(correlation) != length(distances)) {
     stop("Length of sampling bins must match matrix dimensions.")
   }
+
+  if (!length(zlim)) zlim <- range(correlation, finite = TRUE)
 
   op <- par(LoadGraphicsPar(oma = c(0, 0, 0, 0)))
   on.exit(par(op))
