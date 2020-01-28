@@ -175,3 +175,53 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
   p
 
 }
+
+##' Plot ring correlation contours
+##'
+##' Produce a filled contour plot of the expected correlation with a target time
+##' series of the average of two cores sampled from consecutive rings around a
+##' target site.
+##'
+##' @param correlation a square matrix of correlations for sampling two cores
+##'   from the (ring) bins given by \code{distances}.
+##' @param distances numeric vector of the distances of the sampling bins around
+##'   the target site. Its length must match the dimensions of
+##'   \code{corelation}.
+##' @param color.palette a colour palette function to be used to assign colors
+##'   in the plot.
+##' @param zlim correlation limits for the plot.
+##' @author Thomas Münch
+plotCorrelationContours <- function(correlation, distances, color.palette,
+                                    zlim = c(0, 1)) {
+
+  if (diff(dim(correlation)) != 0) {
+    stop("Correlation input is not a square matrix.")
+  }
+  if (nrow(correlation) != length(distances)) {
+    stop("Length of sampling bins must match matrix dimensions.")
+  }
+
+  op <- par(LoadGraphicsPar(oma = c(0, 0, 0, 0)))
+  on.exit(par(op))
+
+  dx <- distances[seq(2, length(distances), 2)]
+
+  filled.contour(x = distances, y = distances, z = correlation,
+                 color.palette = color.palette, zlim = zlim,
+                 plot.title = {
+                   mtext("Distance (km)", side = 1, line = 3.5,
+                         cex = par()$cex.lab);
+                   mtext("Distance (km)", side = 2, line = 3.5,
+                         cex = par()$cex.lab, las = 0)},
+                 plot.axes = {
+                   axis(1);
+                   axis(1, at = dx, labels = FALSE);
+                   axis(2);
+                   axis(2, at = dx, labels = FALSE)})
+
+  op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
+  text(0.99, 0.5, labels = "Correlation",
+       srt = -90, xpd = NA, cex = par()$cex.lab)
+  par(op.usr)
+
+}
