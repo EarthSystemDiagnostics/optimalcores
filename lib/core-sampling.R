@@ -74,7 +74,7 @@ data2matrix <- function(input) {
   res[lower.tri(res)] <- t(res)[lower.tri(res)]
 
   # put bins as scale attribute
-  attr(res, "scale") <- bins
+  attr(res, "scale") <- input$bins
 
   return(res)
 
