@@ -73,6 +73,9 @@ data2matrix <- function(input) {
   # make matrix symmetric
   res[lower.tri(res)] <- t(res)[lower.tri(res)]
 
+  # put bins as scale attribute
+  attr(res, "scale") <- bins
+
   return(res)
 
 }
