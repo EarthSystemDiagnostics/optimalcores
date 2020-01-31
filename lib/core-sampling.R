@@ -529,3 +529,41 @@ processRegionalMean <- function(input) {
   return(res)
 
 }
+
+##' Arrange ring bin occurrences
+##'
+##' Produce a matrix with the occurrences of sampled ring bins; more
+##' specifically, their mid-point distances from the target site.
+##'
+##' @param ring.counts the \code{counts} component of the output of
+##'   \code{processCores}.
+##' @param ring.distances numeric vector of all ring bin mid-point distances.
+##' @param dx horizontal offset in the same units as \code{ring.distances} to
+##'   use when more than one core has been sampled from the same ring bin.
+##' @return an 'n' x 'm' matrix with the sampled mid-point distances, where 'n'
+##'   is the number of samples and 'm' a number equal or larger than the length
+##'   of \code{ring.distances}, depending on the number of cores which have been
+##'   sampled from the same bin.
+##' @author Thomas Münch
+arrangeRingOccurrences <- function(ring.counts, ring.distances, dx = 50) {
+
+  arrangeRingGroup <- function(n, x, dx) {
+
+    if (n == 0) return(NA)
+
+    x <- x + seq(0, (n - 1) * dx, dx)
+    x <- x - ((n - 1) / 2) * dx
+
+    x
+  }
+
+  ring.occurrences <- apply(ring.counts, 1, function(x) {
+
+    unlist(sapply(1 : length(x), function(i) {
+      arrangeRingGroup(n = x[i], x = ring.distances[i], dx = dx)
+    }))
+  })
+
+  list2mat(ring.occurrences)
+
+}
