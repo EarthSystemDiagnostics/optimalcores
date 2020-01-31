@@ -228,3 +228,67 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
   par(op.usr)
 
 }
+
+##' Plot ring bin sampling occurrence
+##'
+##' Produce a plot of the number of cores each ring around a a target site has
+##' been sampled in the optimal cases.
+##'
+##' @param data the output of \code{processCores} called with data from
+##'   \code{sampleNFromRings}.
+##' @param xlab character string with the title for the x axis.
+##' @param ylab character string with the title for the y axis.
+##' @param xlim limits for the x axis.
+##' @param ylim limits for the y axis; if \code{NULL} (the default) the y limits
+##'   are calculated internally.
+##' @param xaxt single character which specifies the x axis type; see \code{par}
+##'   for details.
+##' @param yaxt single character which specifies the y axis type; see \code{par}
+##'   for details.
+##' @param pch either an integer or a single character specifying the point
+##'   symbol to use.
+##' @param cex numerical value giving the amount by which the point symbols
+##'   should be magnified relative to the default.
+##' @param col1 character name of the first colour to use for shading the plot
+##'   to differentiate between the sampling ranks.
+##' @param col2 character name of the second colour to use for shading the plot
+##'   to differentiate between the sampling ranks.
+##' @param alpha opacity factor for \code{col1} and \code{col2} within [0,1].
+##' @author Thomas Münch
+plotRingOccurrences <- function(data,
+                                xlab = "Ring distance (km)", ylab = "Rank",
+                                xlim = c(0, 2250), ylim = NULL,
+                                xaxt = "s", yaxt = "s",
+                                pch = 16, cex = 1.5,
+                                col1 = "grey", col2 = "lightgrey",
+                                alpha = 0.5) {
+
+  ring.distances   <- data$input$ring.distances
+  ring.occurrences <- arrangeRingOccurrences(data$optimal.rings$counts,
+                                             ring.distances)
+
+  nrank <- nrow(ring.occurrences)
+
+  if (!length(ylim)) ylim <- c(0.5, nrank + 0.5)
+
+  shading <- rep(c(col1, col2), nrank)
+
+  plot(1 : 10, type = "n", axes = FALSE, yaxs = "i", xaxs = "i",
+       xlab = "", ylab = "", xlim = xlim, ylim = ylim)
+  if (xaxt != "n") axis(1)
+  if (yaxt != "n") axis(2, at = 1 : nrank)
+  mtext(xlab, 1, 3.5, cex = par()$cex.lab)
+  mtext(ylab, 2, 3.5, cex = par()$cex.lab, las = 0)
+  box()
+
+  for (i in 1 : nrank) {
+    ni <- length(ring.occurrences[i, ])
+
+    ecustools::Polyplot(x = xlim, y1 = rep(i - 0.5, 2), y2 = rep(i + 0.5, 2),
+                        col = shading[i], alpha = alpha)
+    points(ring.occurrences[i, ], rep(i, ni), pch = pch, cex = cex)
+  }
+
+  abline(v = (ring.distances - ring.distances[1])[-1], col = "darkgrey")
+
+}
