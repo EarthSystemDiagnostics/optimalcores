@@ -488,8 +488,8 @@ processCores <- function(input, probs = 1/3,
   #----------
   # best n or upper quantile combinations
 
-  res$optimal.rings <- getOptimalCorrelations(res, n.optim = n.optim,
-                                              upper.quantile = upper.quantile)
+  res <- getOptimalCorrelations(res, n.optim = n.optim,
+                                upper.quantile = upper.quantile)
 
   return(res)
 
@@ -534,20 +534,20 @@ getOptimalCorrelations <- function(data, n.optim = NULL,
     stop("Set single number of optimal cores to output.", call. = FALSE)
   }
 
-  optimal.rings <- list()
+  data$optimal.rings <- list(
 
-  optimal.rings$correlation <- data$correlation[i, ]
-  optimal.rings$distances <- data$distances[i, ]
+  correlation  = data$correlation[i, ],
+  distances    = data$distances[i, ],
+  combinations = data$input$ring.combinations[i, , drop = FALSE]
+  )
 
-  optimal.rings$combinations <- data$input$ring.combinations[i, , drop = FALSE]
-
-  optimal.rings$counts <- t(
-    apply(optimal.rings$combinations, 1, function(x) {
+  data$optimal.rings$counts = t(
+    apply(data$optimal.rings$combinations, 1, function(x) {
       hist(x, 1 : (length(data$input$ring.distances) + 1),
            plot = FALSE, right = FALSE)$counts})
   )
 
-  return(optimal.rings)
+  return(data)
 
 }
 
