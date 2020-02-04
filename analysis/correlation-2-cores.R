@@ -44,6 +44,7 @@ t2m <- dml %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.t2m, N = 2) %>%
   processRegionalMean() %>%
+  prepareMatrixConversion() %>%
   data2matrix()
 
 cat("Running t2m.pw...\n")
@@ -52,6 +53,7 @@ t2m.pw <- dml %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.t2m.pw, N = 2) %>%
   processRegionalMean() %>%
+  prepareMatrixConversion() %>%
   data2matrix()
 
 cat("Running oxy...\n")
@@ -60,6 +62,7 @@ oxy <- dml %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.oxy, N = 2) %>%
   processRegionalMean() %>%
+  prepareMatrixConversion() %>%
   data2matrix()
 
 cat("Running oxy.pw...\n")
@@ -68,6 +71,7 @@ oxy.pw <- dml %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.oxy.pw, N = 2) %>%
   processRegionalMean() %>%
+  prepareMatrixConversion() %>%
   data2matrix()
 
 if (SAVE) {

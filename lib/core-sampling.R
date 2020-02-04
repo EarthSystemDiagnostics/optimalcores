@@ -556,7 +556,7 @@ getOptimalCorrelations <- function(data, n.optim = NULL,
 ##' Compute the average correlation across results obtained from sampling ring
 ##' bins for several target sites in a region.
 ##'
-##' @param input a list with the results from running \code{analyseTargetRegion}.
+##' @param data a list with the results from running \code{analyseTargetRegion}.
 ##' @return a list of two elements:
 ##'   * "bins": numeric vector with the midpoint distances of the possible ring
 ##'     bins from which grid cells could be sampled.
@@ -564,20 +564,58 @@ getOptimalCorrelations <- function(data, n.optim = NULL,
 ##'     midpoint distances of the sampled ring bins and the average correlation
 ##'     across all analysed target sites.
 ##' @author Thomas Münch
-processRegionalMean <- function(input) {
+processRegionalMean <- function(data) {
 
   res <- list(
 
-       bins = input[[1]]$input$ring.distances,
-    samples = input[[1]]$ring.distances.sampled
-  )
+    input = list(
+      ring.distances    = data[[1]]$input$ring.distances,
+      ring.combinations = data[[1]]$input$ring.combinations
+    ),
 
-  res$samples$cor = input %>%
-    sapply(function(x) {x$correlation$mean}) %>%
-    apply(1, mean)
+    N = data[[1]]$N,
+
+    ring.distances.sampled = data[[1]]$ring.distances.sampled,
+
+    distances = data[[1]]$distances,
+
+    correlation = data.frame(
+      mean = data %>%
+        sapply(function(x) {x$correlation$mean}) %>%
+        apply(1, mean),
+      sd = data %>%
+        sapply(function(x) {x$correlation$mean}) %>%
+        apply(1, sd)
+    )
+  )
 
   return(res)
 
+}
+
+##' Prepare matrix conversion of double core results
+##'
+##' Prepare the matrix conversion of the results of sampling two cores from
+##  consecutive ring bins, i.e. the output of this function is tailored to the
+##  input expected by \code{data2matrix}.
+##'
+##' @param data the output of \code{processCores} or \code{processRegionalMean}
+##'   run with the data from \code{sampleTwoFromRings} or from
+##'   \code{analyseTargetRegion} with the parameter \code{N} set to 2.
+##' @return a list of two elements:
+##'   * "bins": numeric vector with the midpoint distances of the possible ring
+##'     bins from which grid cells could be sampled.
+##'   * "samples": a data frame with, for each ring bin combination, the
+##'     midpoint distances of the sampled ring bins and the corresponding
+##'     correlation with the target time series.
+##' @author Thomas Münch
+prepareMatrixConversion <- function(data) {
+
+  list(
+    bins    = data$input$ring.distances,
+    samples = data.frame(
+      data$ring.distances.sampled, cor = data$correlation$mean)
+  )
 }
 
 ##' Arrange ring bin occurrences
