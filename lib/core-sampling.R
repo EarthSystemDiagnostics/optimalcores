@@ -407,7 +407,7 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 }
 
 # ------------------------------------------------------------------------------
-# PROCESSING FUNCTION
+# PROCESSING FUNCTIONS
 
 ##' Process sampling results
 ##'
@@ -419,8 +419,12 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 ##' @param probs numeric; single value of the probability applied to calculate
 ##'   the lower (\code{probs}) and upper (\code{1 - probs}) quantile of each
 ##'   mean sample correlation.
+##' @param n.optim an integer value for the number of maximum mean sample
+##'   correlations to return. Set to \code{NULL} (the default) to return an
+##'   upper quantile of correlations instead.
 ##' @param upper.quantile numeric; value for an upper quantile which
-##'   defines an optimal set of all mean sample correlations.
+##'   defines an optimal set of all mean sample correlations; ignored if
+##'   \code{n.optim} is not \code{NULL}.
 ##' @return a list of six elements:
 ##'   * "input": a copy of the \code{input}.
 ##'   * "N": number of cores averaged for sample correlations in \code{input}.
@@ -433,14 +437,16 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 ##'     the distance from the target of the ring bins sampled for each ring
 ##'     bin combination.
 ##'   * "optimal.rings": a list of four elements:
-##'     (1) a subset of "correlation" with the upper quantile as defined by
-##'         \code{upper.quantile} of the mean correlations.
-##'     (2) the corresponding subset of "distances".
-##'     (3) the corresponding subset of the "ring.combinations" in the input.
+##'     (1) a subset of the "correlation" component with the
+##'         \code{n.optim} highest or the upper quantile, as defined by
+##'         \code{upper.quantile}, of the mean correlations.
+##'     (2) the corresponding subset of the "distances" component.
+##'     (3) the corresponding subset of the "ring.combinations" component.
 ##'     (4) "counts": a matrix with the numbers each ring bin has been sampled
-##'         for each mean correlation in the the upper quantile.
+##'         for each optimal mean correlation.
 ##' @author Thomas Münch
-processCores <- function(input, probs = 1/3, upper.quantile = 0.95) {
+processCores <- function(input, probs = 1/3,
+                         n.optim = NULL, upper.quantile = 0.95) {
 
   res <- list()
 
@@ -475,29 +481,73 @@ processCores <- function(input, probs = 1/3, upper.quantile = 0.95) {
   # ring distance mean and variability
   res$distances <- data.frame(
     
-    mean = apply(res$ring.distances, 1, mean),
-    sd   = apply(res$ring.distances, 1, sd)
+    mean = apply(res$ring.distances.sampled, 1, mean),
+    sd   = apply(res$ring.distances.sampled, 1, sd)
   )
 
   #----------
-  # upper quantile combinations
-  corQuantile <- quantile(res$correlation$mean, probs = upper.quantile)
-  i <- which(res$correlation$mean >= corQuantile)
-  
-  res$optimal.rings <- list()
+  # best n or upper quantile combinations
 
-  res$optimal.rings$correlation <- res$correlation[i, ]
-  res$optimal.rings$distances <- res$distances[i, ]
+  res$optimal.rings <- getOptimalCorrelations(res, n.optim = n.optim,
+                                              upper.quantile = upper.quantile)
 
-  res$optimal.rings$combinations <- input$ring.combinations[i, , drop = FALSE]
+  return(res)
 
-  res$optimal.rings$counts <- t(
-    apply(res$optimal.rings$combinations, 1, function(x) {
-      hist(x, 1 : (length(input$ring.distances) + 1),
+}
+
+##' Obtain optimal correlations
+##'
+##' Obtain the optimal correlations from a set of sampled ring bin
+##' combinations. The optimal correlations are determined either from selecting
+##' the first N highest correlation values, or from selecting an upper quantile
+##' range of correlation values.
+##'
+##' @param data a list with the input data following the structure defined by
+##'   \code{processCores}.
+##' @param n.optim an integer value for the number of maximum correlations to
+##'   return. Set to \code{NULL} (the default) to return an upper quantile of
+##'   correlations instead.
+##' @param upper.quantile numeric; the lower threshold of an upper quantile
+##'   defining the optimal correlations; ignored if \code{n.optim} is not
+##'   \code{NULL}.
+##' @return a list of four elements:
+##'   (1) a subset of the "correlation" component in \code{data} with the
+##'       \code{n.optim} highest or the upper quantile, as defined by
+##'       \code{upper.quantile}, of the mean correlations.
+##'   (2) the corresponding subset of the "distances" component in \code{data}.
+##'   (3) the corresponding subset of the "ring.combinations" component in
+##'       \code{data}.
+##'   (4) "counts": a matrix with the numbers each ring bin has been sampled
+##'       for each optimal mean correlation.
+##' @author Thomas Münch
+getOptimalCorrelations <- function(data, n.optim = NULL,
+                                   upper.quantile = 0.95) {
+
+  if (!length(n.optim)) {
+    corQuantile <- quantile(data$correlation$mean, probs = upper.quantile)
+    i <- which(data$correlation$mean >= corQuantile)
+  } else if (length(n.optim) == 1) {
+    rank <- sort.int(data$correlation$mean, decreasing = TRUE,
+                     index.return = TRUE)
+    i <- rank$ix[1 : n.optim]
+  } else {
+    stop("Set single number of optimal cores to output.", call. = FALSE)
+  }
+
+  optimal.rings <- list()
+
+  optimal.rings$correlation <- data$correlation[i, ]
+  optimal.rings$distances <- data$distances[i, ]
+
+  optimal.rings$combinations <- data$input$ring.combinations[i, , drop = FALSE]
+
+  optimal.rings$counts <- t(
+    apply(optimal.rings$combinations, 1, function(x) {
+      hist(x, 1 : (length(data$input$ring.distances) + 1),
            plot = FALSE, right = FALSE)$counts})
   )
 
-  return(res)
+  return(optimal.rings)
 
 }
 
