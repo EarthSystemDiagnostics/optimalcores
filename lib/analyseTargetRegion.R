@@ -27,9 +27,9 @@
 ##' @param verbose logical; if \code{TRUE}, print a progess message giving
 ##'   the number of the currently analysed target site of the \code{region} and
 ##'   its latitude and longitude; defaults to \code{FALSE}.
-##' @return The return value depends on the number of averaged sites: if {N} =
-##'   1, it is the output of \code{\link{processSingles}}, else the output of
-##'   \code{\link{processNCores}}.
+##' @return a list of the same length as the number of sites in \code{region};
+##'   each list element contains the output of \code{processCores} being applied
+##'   on the results of the respective regional site.
 ##' @author Thomas Münch
 analyseTargetRegion <- function(region, target.field, study.field, N = 1,
                                 max.dist = 2000, delta.d = 250, nmc = 100,
