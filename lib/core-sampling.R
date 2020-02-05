@@ -363,6 +363,18 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
                              field, target, distance.field) {
 
+  require(parallel)
+  num.cores <- detectCores()
+
+  sampleMonteCarlo <- function(ni, combi, sites) {
+    sapply(combi, function(x) {
+      sample(sites[[x]], 1)})
+  }
+
+  cor2target <- function(x, target, use = "pairwise") {
+    cor(x, target, use = use)
+  }
+
   class(field) <- attr(field, "oclass")
 
   if (ncol(field) != length(distance.field)) {
@@ -384,19 +396,23 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
   grid.indices <- array(dim = c(nrow(ring.comb), nmc, N))
 
   for (i in 1 : nrow(ring.comb)) {
-    for (j in 1 : nmc) {
 
-      # run nmc Monte Carlo samples for given ring combination
+    # run nmc Monte Carlo samples for given ring combination
+    ## tmp <- mclapply(seq(nmc), FUN = sampleMonteCarlo,
+    ##                 combi = ring.comb[i, ], sites = sites,
+    ##                 mc.cores = num.cores)
+    tmp <- lapply(seq(nmc), FUN = sampleMonteCarlo,
+                  combi = ring.comb[i, ], sites = sites)
 
-      i.grids <- sapply(ring.comb[i, ], function(x) {
-        sample(sites[[x]], 1)})
+    grid.indices[i, , ] <- t(simplify2array(tmp))
 
-      correlations[i, j] <-
-        cor(rowMeans(field[, i.grids]), target, use = "pairwise")
+    tmp <- lapply(tmp, FUN = function(x, field) {rowMeans(field[, x])},
+                  field = field)
+    ## tmp <- lapply(tmp, FUN = cor2target, target = target)
+    tmp <- mclapply(tmp, FUN = cor2target, target = target,
+                    mc.cores = num.cores)
+    correlations[i, ] <- t(simplify2array(tmp))
 
-      grid.indices[i, j, ] <- i.grids
-
-    }
   }
 
   return(list(ring.distances = ring.dist + delta.d / 2,
