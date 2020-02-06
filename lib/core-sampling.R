@@ -346,7 +346,7 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   spatial structure of these distances must follow the structure of
 ##'   \code{field}.
 ##' @param .parallel logical; whether to parallelize the correlation
-##'   computations for the individual ring bin combinations. Defaults to
+##'   computations of the individual ring bin combinations. Defaults to
 ##'   \code{TRUE}.
 ##' @param mc.cores integer; the number of cores to use for the parallel
 ##'   computation, i.e. at most how many child processes will be run
