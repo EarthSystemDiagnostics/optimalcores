@@ -345,6 +345,13 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   cells in \code{field} relative to the grid cell of the target site. The
 ##'   spatial structure of these distances must follow the structure of
 ##'   \code{field}.
+##' @param .parallel logical; whether to parallelize the correlation
+##'   computations of the individual ring bin combinations. Defaults to
+##'   \code{TRUE}.
+##' @param mc.cores integer; the number of cores to use for the parallel
+##'   computation, i.e. at most how many child processes will be run
+##'   simultaneously. The default \code{NULL} means to use the value from
+##'   \code{parallel::detectCores()}.
 ##' @return a list with four elements:
 ##'   * "ring.distances": numeric vector with the mid-point distances in km
 ##'     of the sampled ring bins from the target.
@@ -361,7 +368,8 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'     bins and 'm' is the number of Monte Carlo samples (\code{nmc}).
 ##' @author Thomas Münch
 sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
-                             field, target, distance.field) {
+                             field, target, distance.field,
+                             .parallel = TRUE, mc.cores = NULL) {
 
   class(field) <- attr(field, "oclass")
 
@@ -371,8 +379,29 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
          "Check your input.")
   }
 
+  # define helper functions
+
+  sampleRingMonteCarlo <- function(combi, sites, nmc) {
+
+    tmp <- sapply(seq(nmc), function(i, combi, sites) {
+      sapply(combi, function(x, sites) {
+      sample(sites[[x]], 1)}, sites)}, combi, sites)
+    t(tmp)
+  }
+
+  sampleCorrelation <- function(x, grid.indices, field, target) {
+
+    core.means <- apply(grid.indices[x, , ], 1, function(x, field) {
+      rowMeans(field[, x])}, field = field)
+    correlations <- c(cor(core.means, target, use = "pairwise"))
+
+    return(correlations)
+
+  }
+
   # define ring bins
   ring.dist <- seq(0, max.dist, delta.d)
+
   # grid cells within each ring bin
   sites <- sapply(ring.dist, getRingGrids, distance.field = distance.field)
 
@@ -380,24 +409,35 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
   ring.comb <- arrangements::combinations(x = 1 : length(ring.dist),
                                           k = N, replace = TRUE)
 
-  correlations <- array(dim = c(nrow(ring.comb), nmc))
-  grid.indices <- array(dim = c(nrow(ring.comb), nmc, N))
+  # obtain nmc Monte Carlo grid cell sets for each ring bin combination
+  grid.indices <- lapply(split(ring.comb, row(ring.comb)),
+                         sampleRingMonteCarlo,
+                         sites = sites, nmc = nmc)
+  # convert to array
+  grid.indices <- aperm(aperm(
+    abind::abind(grid.indices, along = 3),
+    perm = c(3, 2, 1)), perm = c(1, 3, 2))
+  attr(grid.indices, "dimnames") <- NULL
 
-  for (i in 1 : nrow(ring.comb)) {
-    for (j in 1 : nmc) {
+  # obtain correlation with target for each grid cell set
+  if (.parallel) {
 
-      # run nmc Monte Carlo samples for given ring combination
+    require(parallel)
+    if (!length(mc.cores)) mc.cores <- parallel::detectCores()
 
-      i.grids <- sapply(ring.comb[i, ], function(x) {
-        sample(sites[[x]], 1)})
+    correlations <- parallel::mclapply(seq(nrow(ring.comb)), sampleCorrelation,
+                                       grid.indices = grid.indices,
+                                       field = field, target = target,
+                                       mc.cores = mc.cores)
 
-      correlations[i, j] <-
-        cor(rowMeans(field[, i.grids]), target, use = "pairwise")
+  } else {
 
-      grid.indices[i, j, ] <- i.grids
-
-    }
+    correlations <- lapply(seq(nrow(ring.comb)), sampleCorrelation,
+                           grid.indices = grid.indices,
+                           field = field, target = target)
   }
+
+  correlations <- t(simplify2array(correlations))
 
   return(list(ring.distances = ring.dist + delta.d / 2,
               ring.combinations = ring.comb,
