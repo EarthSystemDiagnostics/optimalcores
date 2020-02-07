@@ -383,10 +383,8 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 
   sampleRingMonteCarlo <- function(combi, sites, nmc) {
 
-    tmp <- sapply(seq(nmc), function(i, combi, sites) {
-      sapply(combi, function(x, sites) {
-      sample(sites[[x]], 1)}, sites)}, combi, sites)
-    t(tmp)
+    sapply(combi, function(x, sites) {
+      sample(sites[[x]], nmc, replace = TRUE)}, sites)
   }
 
   sampleCorrelation <- function(x, grid.indices, field, target) {
