@@ -223,8 +223,9 @@ sampleOneFromRings <- function(max.dist = 2000, delta.d = 250,
 ##' Sample all combinations of two cores (grid cells) from a climate field
 ##' which fall in either the same or in two different consecutive rings around a
 ##' target site, and compute the correlation of the average of these cores with
-##' the target site reference time series. All possibilities of combining two
-##' ring bins are used, including sampling two cores from the same bin.
+##' the target site reference time series. All possibilities of pairwise
+##' combinations of two ring bins are used, including sampling two cores from
+##' the same bin.
 ##'
 ##' @param max.dist numeric; the maximum bin ring distance (in km) to study,
 ##'   i.e. the last ring bin will span from \code{max.dist} to
@@ -239,6 +240,9 @@ sampleOneFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   cells in \code{field} relative to the grid cell of the target site. The
 ##'   spatial structure of these distances must follow the structure of
 ##'   \code{field}.
+##' @param .fix.central logical; if \code{TRUE}, ring sampling only includes
+##'   combining the central ring with itself and all other rings; else (the
+##'   default) all unique pairwise ring combinations are sampled.
 ##' @return a list of four elements:
 ##'   * "ring.distances": numeric vector with the mid-point distances in km
 ##'     of the sampled ring bins from the target.
@@ -261,7 +265,8 @@ sampleOneFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'     matrix cells are filled with \code{NA}. 
 ##' @author Thomas Münch
 sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
-                               field, target, distance.field) {
+                               field, target, distance.field,
+                               .fix.central = FALSE) {
 
   class(field) <- attr(field, "oclass")
 
@@ -278,9 +283,18 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
   sites <- sapply(ring.dist, getRingGrids, distance.field = distance.field,
                   delta.d = delta.d)
 
-  # get all unique combinations of ring segments
-  ring.comb <- arrangements::combinations(1 : length(ring.dist),
-                                          k = 2, replace = TRUE)
+  # get all unique pairwise combinations of ring segments
+  if (.fix.central) {
+
+    # all combinations for fixing the central ring
+    ring.comb <- cbind(1, 1 : length(ring.dist))
+
+  } else {
+
+    # all possible combinations
+    ring.comb <- arrangements::combinations(1 : length(ring.dist),
+                                            k = 2, replace = TRUE)
+  }
   
   # get correlation of grid cell pairs with target
   tmp <- apply(ring.comb, 1, function(i) {
