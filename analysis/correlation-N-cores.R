@@ -94,6 +94,12 @@ system.time(
 
 if (SAVE) {
 
+  # strip off input data to save disk space
+  edml.n3$input <- NULL
+  edml.n5$input <- NULL
+  vost.n3$input <- NULL
+  vost.n5$input <- NULL
+
   saved <- list(
     edml = list(N3 = edml.n3, N5 = edml.n5),
     vost = list(N3 = vost.n3, N5 = vost.n5)
