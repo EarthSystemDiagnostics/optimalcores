@@ -263,7 +263,7 @@ plotRingOccurrences <- function(data,
                                 col1 = "grey", col2 = "lightgrey",
                                 alpha = 0.5) {
 
-  ring.distances   <- data$input$ring.distances
+  ring.distances   <- unique(data$ring.distances.sampled$core1)
   ring.occurrences <- arrangeRingOccurrences(data$optimal.rings$counts,
                                              ring.distances)
 
