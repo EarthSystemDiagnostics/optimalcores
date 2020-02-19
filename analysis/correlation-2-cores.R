@@ -14,6 +14,7 @@ if (interactive()) {
 
   # interactive usage
   source("init.R")
+  cmd.arg <- "dml"
 
 } else {
 
@@ -22,6 +23,11 @@ if (interactive()) {
   setwd(pwd)
   source("../setup.R")
   source("init.R")
+
+  cmd.arg <- commandArgs(trailingOnly = TRUE)
+  if (!length(cmd.arg)) {
+    stop("Please specify a command line option for running the simulation.")
+  }
 }
 
 # save the correlation data?
@@ -31,7 +37,22 @@ SAVE <- TRUE
 # Select data and define region of target sites
 
 model  <- selectData()
-dml    <- setTargetRegion(field = model$lnd.t2m, verbose = FALSE)
+
+if (cmd.arg == "dml") {
+
+  region <- setTargetRegion(field = model$lnd.t2m, verbose = FALSE)
+
+} else if (cmd.arg == "vostok") {
+
+  region <- setTargetRegion(field = model$lnd.t2m,
+                            min.lat = -83.5, max.lat = -73.5,
+                            min.lon = 89.5, max.lon = 124.5, verbose = FALSE)
+
+} else {
+
+  stop(sprintf("Unknown command line option '%s' to select analysis region.",
+               cmd.arg))
+}
 
 # ------------------------------------------------------------------------------
 # Expected correlation depending on distance for averaging two cores
@@ -40,7 +61,7 @@ cat("\n")
 cat(as.character(Sys.time()), "\n")
 cat("Running t2m...\n")
 
-t2m <- dml %>%
+t2m <- region %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.t2m, N = 2) %>%
   processRegionalMean() %>%
@@ -49,7 +70,7 @@ t2m <- dml %>%
 
 cat("Running t2m.pw...\n")
 
-t2m.pw <- dml %>%
+t2m.pw <- region %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.t2m.pw, N = 2) %>%
   processRegionalMean() %>%
@@ -58,7 +79,7 @@ t2m.pw <- dml %>%
 
 cat("Running oxy...\n")
 
-oxy <- dml %>%
+oxy <- region %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.oxy, N = 2) %>%
   processRegionalMean() %>%
@@ -67,7 +88,7 @@ oxy <- dml %>%
 
 cat("Running oxy.pw...\n")
 
-oxy.pw <- dml %>%
+oxy.pw <- region %>%
   analyseTargetRegion(target.field = model$t2m,
                       study.field = model$lnd.oxy.pw, N = 2) %>%
   processRegionalMean() %>%
@@ -84,7 +105,8 @@ if (SAVE) {
   )
   attr(saved, "version") <- Sys.Date()
 
-  saveRDS(saved, file = "analysis/ring-correlation_N=2.rds")
+  saveRDS(saved,
+          file = sprintf("analysis/ring_correlation_%s_N=2.rds", cmd.arg))
 
 }
 
@@ -101,26 +123,28 @@ label <- c(expression(bold("(a) ") * italic("T")["2m"]),
            expression(bold("(x) ") * delta^{18} * "O"),
            expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
 
+filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_01_", cmd.arg)
+
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_01_t2m.png"))
+  SAVEPATH, "main", paste0(filebase, "t2m.png")))
 plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
                         label = label[1])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_02_t2m.pw.png"))
+  SAVEPATH, "main", paste0(filebase, "t2m.pw.png")))
 plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.55),
                         label = label[2])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_03_oxy.png"))
+  SAVEPATH, "main", paste0(filebase, "oxy.png")))
 plotCorrelationContours(oxy, distances, color.palette, zlim = c(0.2, 0.5),
                         label = label[3])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_04_oxy.pw.png"))
+  SAVEPATH, "main", paste0(filebase, "oxy.pw.png")))
 plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.35),
                         label = label[4])
 dev.off()
