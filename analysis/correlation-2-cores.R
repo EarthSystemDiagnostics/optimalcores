@@ -123,29 +123,37 @@ label <- c(expression(bold("(a) ") * italic("T")["2m"]),
            expression(bold("(x) ") * delta^{18} * "O"),
            expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
 
-filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_01_", cmd.arg)
+filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_", cmd.arg)
+
+if (cmd.arg == "dml") {
+  zlim.oxy = c(0.2, 0.5)
+  zlim.oxy.pw = c(0.15, 0.35)
+} else {
+  zlim.oxy = c(0.1, 0.55)
+  zlim.oxy.pw = c(0.15, 0.45)
+}
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "t2m.png")))
+  SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
 plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
                         label = label[1])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "t2m.pw.png")))
+  SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
 plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.55),
                         label = label[2])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "oxy.png")))
-plotCorrelationContours(oxy, distances, color.palette, zlim = c(0.2, 0.5),
+  SAVEPATH, "main", paste0(filebase, "03_oxy.png")))
+plotCorrelationContours(oxy, distances, color.palette, zlim = zlim.oxy,
                         label = label[3])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "oxy.pw.png")))
-plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.35),
+  SAVEPATH, "main", paste0(filebase, "04_oxy.pw.png")))
+plotCorrelationContours(oxy.pw, distances, color.palette, zlim = zlim.oxy.pw,
                         label = label[4])
 dev.off()
 
