@@ -191,9 +191,10 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
 ##'   in the plot.
 ##' @param zlim correlation limits for the plot. If \code{NULL} use default
 ##'   values from \code{filled.contour}.
+##' @param label character string providing a label for the plot.
 ##' @author Thomas Münch
 plotCorrelationContours <- function(correlation, distances, color.palette,
-                                    zlim = NULL) {
+                                    zlim = NULL, label = "") {
 
   if (diff(dim(correlation)) != 0) {
     stop("Correlation input is not a square matrix.")
@@ -204,26 +205,28 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
 
   if (!length(zlim)) zlim <- range(correlation, finite = TRUE)
 
-  op <- par(LoadGraphicsPar(oma = c(0, 0, 0, 0)))
+  op <- par(LoadGraphicsPar(mar = c(0, 0, 0, 0), oma = c(5, 6.75, 2, 6.25)))
   on.exit(par(op))
 
-  dx <- distances[seq(2, length(distances), 2)]
+  dx <- (distances - distances[1])[seq(2, 8, 2)]
 
   filled.contour(x = distances, y = distances, z = correlation,
                  color.palette = color.palette, zlim = zlim,
                  plot.title = {
-                   mtext("Distance (km)", side = 1, line = 3.5,
+                   mtext("Distance of first core (km)", side = 1, line = 3.5,
                          cex = par()$cex.lab);
-                   mtext("Distance (km)", side = 2, line = 3.5,
-                         cex = par()$cex.lab, las = 0)},
+                   mtext("Distance of second core (km)", side = 2, line = 4,
+                         cex = par()$cex.lab, las = 0);
+                   text(150, 2140, labels = label,
+                        adj = c(0, 0), xpd = NA, cex = par()$cex.lab)},
                  plot.axes = {
-                   axis(1);
+                   axis(1, at = seq(500, 2000, 500));
                    axis(1, at = dx, labels = FALSE);
-                   axis(2);
+                   axis(2, at = seq(500, 2000, 500));
                    axis(2, at = dx, labels = FALSE)})
 
   op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
-  text(0.99, 0.5, labels = "Correlation",
+  text(1.16, 0.5, labels = "Correlation",
        srt = -90, xpd = NA, cex = par()$cex.lab)
   par(op.usr)
 

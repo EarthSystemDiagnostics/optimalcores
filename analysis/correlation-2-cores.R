@@ -95,25 +95,33 @@ cat("done.\n")
 # Plotting
 
 color.palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
-distances <- attr(t2m, "scale") - attr(t2m, "scale")[1]
+distances <- attr(t2m, "scale")
+label <- c(expression(bold("(a) ") * italic("T")["2m"]),
+           expression(bold("(b) ") * italic("T")["2m"]^{"(pw)"}),
+           expression(bold("(x) ") * delta^{18} * "O"),
+           expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_01_t2m.png"))
-plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1))
+  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_01_t2m.png"))
+plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
+                        label = label[1])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_02_t2m.pw.png"))
-plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.55))
+  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_02_t2m.pw.png"))
+plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.55),
+                        label = label[2])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_03_oxy.png"))
-plotCorrelationContours(oxy, distances, color.palette, zlim = c(0.2, 0.5))
+  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_03_oxy.png"))
+plotCorrelationContours(oxy, distances, color.palette, zlim = c(0.2, 0.5),
+                        label = label[3])
 dev.off()
 
 Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_04_oxy.pw.png"))
-plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.35))
+  SAVEPATH, "main", "echam5_mpiom_wiso_two_core_correlation_edml_04_oxy.pw.png"))
+plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.35),
+                        label = label[4])
 dev.off()
 
