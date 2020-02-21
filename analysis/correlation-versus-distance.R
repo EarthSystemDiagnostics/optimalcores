@@ -83,6 +83,14 @@ vos$oxy.pw <- vos.region %>%
 # ------------------------------------------------------------------------------
 # Plotting
 
+m1 <- lm(log(dml$t2m$correlation$mean) ~ dml$t2m$distances$mean + 0)
+m2 <- lm(log(vos$t2m$correlation$mean) ~ vos$t2m$distances$mean + 0)
+
+x <- seq(min(dml$t2m$distances$mean), max(dml$t2m$distances$mean), 1)
+
+tau1 <- -1 / coefficients(m1)
+tau2 <- -1 / coefficients(m2)
+
 label <- c(expression(italic("T")["2m"]),
            expression(delta^{18} * "O"),
            expression(delta^{18} * "O"^{"(pw)"}))
@@ -94,7 +102,7 @@ col3 <- "dodgerblue3"
 label1 <- expression(bold("(a) ") * "DML")
 label2 <- expression(bold("(b) ") * "Vostok")
 
-Quartz(file.path(SAVEPATH, "main", "fig_03.pdf"),
+Quartz(file.path(SAVEPATH, "main", "fig_04.pdf"),
        height = 5.5, width = 12)
 op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(0, 0, 0, 0),
@@ -106,6 +114,8 @@ plot(dml$t2m$distances$mean, dml$t2m$correlation$mean, type = "n",
 mtext("Distance (km)", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
+
+lines(x, exp(-x/tau1), lty = 2, lwd = 1.5)
 
 lines(dml$t2m$distances$mean, dml$t2m$correlation$mean,
       col = col1, type = "b", lwd = 2.5)
@@ -119,6 +129,8 @@ plot(vos$t2m$distances$mean, vos$t2m$correlation$mean, type = "n",
      xlim = c(0, 2125), ylim = c(0, 1))
 mtext("Distance (km)", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext(label2, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
+
+lines(x, exp(-x/tau2), lty = 2, lwd = 1.5)
 
 lines(vos$t2m$distances$mean, vos$t2m$correlation$mean,
       col = col1, type = "b", lwd = 2.5)
