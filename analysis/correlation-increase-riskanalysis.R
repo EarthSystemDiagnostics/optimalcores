@@ -109,15 +109,15 @@ label1 <- expression(bold("(a)"))
 label2 <- expression(bold("(b)"))
 
 Quartz(file.path(SAVEPATH, "main", "fig_07.pdf"),
-       height = 4.5, width = 12)
+       height = 5, width = 12)
 op <- par(LoadGraphicsPar(mfcol = c(1, 2),
-                          mar = c(5, 6, 0.5, 1), xaxs = "i", yaxs = "i"))
+                          mar = c(5, 6, 2.5, 1), xaxs = "i", yaxs = "i"))
 
 plot(N, edml$optim, type = "n", xlab = "", ylab = "", log = "x", axes = FALSE,
      xlim = c(1, 7), ylim = c(0.2, 0.5))
 axis(1, at = N)
 axis(2)
-mtext("Number of averaged cores", side = 1, line = 3.5, cex = par()$cex.lab)
+mtext("Number of averaged sites", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 4.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = -1.5, cex = par()$cex.lab, adj = 0.02, padj = 0)
 
@@ -132,7 +132,7 @@ lines(N, vost$optim, col = col2, lty = 1, lwd = 2.5)
 
 legend("bottomleft", c("EDML site", "Vostok site"), col = c(col1, col2),
        lty = 1, lwd = 2.5, bty = "n")
-legend("bottomright", c("local ring", "optimal combination"), col = "darkgrey",
+legend("bottomright", c("Local ring", "Optimal combination"), col = "darkgrey",
        lty = c(2, 1), lwd = 1.5, bty = "n")
 
 hist(dist1, xlab = "", ylab = "", main = "", axes = FALSE,
