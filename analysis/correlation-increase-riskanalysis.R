@@ -15,7 +15,7 @@ model <- selectData()
 target1 <- setTarget(model$t2m, site = "edml")
 target2 <- setTarget(model$t2m, site = "vostok")
 
-N <- c(1, 2, 3, 5)
+N <- c(1, 2, 3, 5, 7)
 
 edml <- list(optim = numeric(length(N)), local = numeric(length(N)))
 vost <- list(optim = numeric(length(N)), local = numeric(length(N)))
@@ -68,6 +68,16 @@ vost$optim[4] <- dat$vost$N5$optimal.rings$correlation$mean[1]
 vost$local[3] <- dat$vost$N3$correlation$mean[1]
 vost$local[4] <- dat$vost$N5$correlation$mean[1]
 
+# N = 7
+
+dat <- readRDS("analysis/ring_occurrences_edml_vostok_N=7.rds")
+
+edml$optim[5] <- dat$edml$optimal.rings$correlation$mean
+edml$local[5] <- dat$edml$correlation$mean[1]
+
+vost$optim[5] <- dat$vost$optimal.rings$correlation$mean
+vost$local[5] <- dat$vost$correlation$mean[1]
+
 # ------------------------------------------------------------------------------
 # Get index of optimal ring combination
 
@@ -104,8 +114,8 @@ op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(5, 6, 0.5, 1), xaxs = "i", yaxs = "i"))
 
 plot(N, edml$optim, type = "n", xlab = "", ylab = "", log = "x", axes = FALSE,
-     xlim = c(1, 5), ylim = c(0.2, 0.5))
-axis(1)
+     xlim = c(1, 7), ylim = c(0.2, 0.5))
+axis(1, at = N)
 axis(2)
 mtext("Number of averaged cores", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 4.5, cex = par()$cex.lab, las = 0)
