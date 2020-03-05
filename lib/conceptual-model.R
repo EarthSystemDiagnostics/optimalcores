@@ -1,7 +1,7 @@
 ##
 ## aim:
 ## conceptual model for the decorrelation structure of the temperature and
-## precipitation-weighted temperature fields
+## precipitation-weighted temperature and isotope fields
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores
 ##
@@ -26,7 +26,7 @@
 ##' @return correlation between the average temperature time series of sites
 ##'   \code{r1} and \code{r2} and the target site temperature.
 ##' @author Thomas Münch
-modelCorrelationT2m <- function(r1, r2, alpha, tau = 2000) {
+modelT2mCorrelation <- function(r1, r2, alpha, tau = 2000) {
 
   d  <- sqrt(r1^2 + r2^2 - 2 * r1 * r2 * cos(alpha))
   
@@ -69,7 +69,7 @@ modelCorrelationT2m <- function(r1, r2, alpha, tau = 2000) {
 ##'   time series of sites \code{r1} and \code{r2} and the target site
 ##'   temperature.
 ##' @author Thomas Münch
-modelCorrelationT2mPW <- function(r1, r2, alpha, tau = 2000,
+modelT2mPWCorrelation <- function(r1, r2, alpha, tau = 2000,
                                   tau.pw = 500, xi = 0.7) {
 
   d <- sqrt(r1^2 + r2^2 - 2 * r1 * r2 * cos(alpha))
@@ -120,7 +120,7 @@ modelCorrelationT2mPW <- function(r1, r2, alpha, tau = 2000,
 ##'   isotope time series of sites \code{r1} and \code{r2} and the target site
 ##'   temperature.
 ##' @author Thomas Münch
-modelCorrelationOxyPW <- function(r1, r2, alpha, tau.d = 1000,
+modelOxyPWCorrelation <- function(r1, r2, alpha, tau.d = 1000,
                                   tau.pw = 500, xi = 0.7,
                                   c0 = 0.3, c1 = 0.175, d0 = 1500) {
 
