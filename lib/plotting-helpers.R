@@ -229,7 +229,8 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
   op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
   text(1.16, 0.5, labels = "Correlation",
        srt = -90, xpd = NA, cex = par()$cex.lab)
-  text(0.084, 1.033, labels = label, xpd = NA, cex = par()$cex.lab)
+  text(0.0105, 1.007, labels = label,
+       adj = c(0, 0), xpd = NA, cex = par()$cex.lab)
   par(op.usr)
 
 }
