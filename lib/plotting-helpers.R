@@ -216,9 +216,7 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
                    mtext("Distance of first core (km)", side = 1, line = 3.5,
                          cex = par()$cex.lab);
                    mtext("Distance of second core (km)", side = 2, line = 4,
-                         cex = par()$cex.lab, las = 0);
-                   text(150, 2140, labels = label,
-                        adj = c(0, 0), xpd = NA, cex = par()$cex.lab)},
+                         cex = par()$cex.lab, las = 0)},
                  plot.axes = {
                    axis(1, at = seq(500, 2000, 500));
                    axis(1, at = dx, labels = FALSE);
@@ -228,6 +226,7 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
   op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
   text(1.16, 0.5, labels = "Correlation",
        srt = -90, xpd = NA, cex = par()$cex.lab)
+  text(0.084, 1.033, labels = label, xpd = NA, cex = par()$cex.lab)
   par(op.usr)
 
 }
