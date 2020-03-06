@@ -366,6 +366,12 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   computation, i.e. at most how many child processes will be run
 ##'   simultaneously. The default \code{NULL} means to use the value from
 ##'   \code{parallel::detectCores()}.
+##' @param ngroups specify an integer number of groups into which the ring bin
+##'   combinations are subdivided, which forces the ring sampling to be executed
+##'   successively in a loop over these groups. This setup can be necessary in
+##'   order to limit RAM demand needed for running a large number of cores
+##'   (\code{N} > 5) in combination with a large number of Monte Carlo
+##'   iterations. Defaults to \code{NULL} which uses no grouping.
 ##' @return a list with four elements:
 ##'   * "ring.distances": numeric vector with the mid-point distances in km
 ##'     of the sampled ring bins from the target.
@@ -383,7 +389,8 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##' @author Thomas Münch
 sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
                              field, target, distance.field,
-                             .parallel = TRUE, mc.cores = NULL) {
+                             .parallel = TRUE, mc.cores = NULL,
+                             ngroups = NULL) {
 
   class(field) <- attr(field, "oclass")
 
@@ -411,6 +418,8 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 
   }
 
+  if (!length(ngroups)) ngroups <- 1
+
   # define ring bins
   ring.dist <- seq(0, max.dist, delta.d)
 
@@ -418,41 +427,62 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
   sites <- sapply(ring.dist, getRingGrids, distance.field = distance.field)
 
   # all possible combinations of ring bins for N cores
-  ring.comb <- arrangements::combinations(x = 1 : length(ring.dist),
-                                          k = N, replace = TRUE)
+  ring.comb.full <- arrangements::combinations(x = 1 : length(ring.dist),
+                                               k = N, replace = TRUE)
 
-  # obtain nmc Monte Carlo grid cell sets for each ring bin combination
-  grid.indices <- lapply(split(ring.comb, row(ring.comb)),
-                         sampleRingMonteCarlo,
-                         sites = sites, nmc = nmc)
-  # convert to array
-  grid.indices <- aperm(aperm(
-    abind::abind(grid.indices, along = 3),
-    perm = c(3, 2, 1)), perm = c(1, 3, 2))
-  attr(grid.indices, "dimnames") <- NULL
+  # index vector of the number of ring bin combinations
+  x <- seq(nrow(ring.comb.full))
 
-  # obtain correlation with target for each grid cell set
-  if (.parallel) {
+  # split in nearly equal groups of indices
+  groups <- split(x, sort(x %% ngroups))
 
-    require(parallel)
-    if (!length(mc.cores)) mc.cores <- parallel::detectCores()
+  # loop over ring bin combination groups
+  cor.lst <- list()
+  for (i in 1 : length(groups)) {
 
-    correlations <- parallel::mclapply(seq(nrow(ring.comb)), sampleCorrelation,
-                                       grid.indices = grid.indices,
-                                       field = field, target = target,
-                                       mc.cores = mc.cores)
+    if (ngroups != 1) print(i)
 
-  } else {
+    # combinations for this index group
+    ring.comb <- ring.comb.full[groups[[i]], ]
 
-    correlations <- lapply(seq(nrow(ring.comb)), sampleCorrelation,
-                           grid.indices = grid.indices,
-                           field = field, target = target)
+    # obtain nmc Monte Carlo grid cell sets for each ring bin combination
+    grid.indices <- lapply(split(ring.comb, row(ring.comb)),
+                           sampleRingMonteCarlo,
+                           sites = sites, nmc = nmc)
+    # convert to array
+    grid.indices <- aperm(aperm(
+      abind::abind(grid.indices, along = 3),
+      perm = c(3, 2, 1)), perm = c(1, 3, 2))
+    attr(grid.indices, "dimnames") <- NULL
+
+    # obtain correlation with target for each grid cell set
+    if (.parallel) {
+
+      require(parallel)
+      if (!length(mc.cores)) mc.cores <- parallel::detectCores()
+
+      correlations <- parallel::mclapply(seq(nrow(ring.comb)), sampleCorrelation,
+                                         grid.indices = grid.indices,
+                                         field = field, target = target,
+                                         mc.cores = mc.cores)
+
+    } else {
+
+      correlations <- lapply(seq(nrow(ring.comb)), sampleCorrelation,
+                             grid.indices = grid.indices,
+                             field = field, target = target)
+    }
+
+    if (ngroups != 1) grid.indices <- NULL
+
+    cor.lst[[i]] <- t(simplify2array(correlations))
+
   }
 
-  correlations <- t(simplify2array(correlations))
+  correlations <- do.call(rbind, cor.lst)
 
   return(list(ring.distances = ring.dist + delta.d / 2,
-              ring.combinations = ring.comb,
+              ring.combinations = ring.comb.full,
               grid.indices = grid.indices,
               correlations = correlations))
 
