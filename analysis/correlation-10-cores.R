@@ -3,7 +3,7 @@
 ##
 ## aim:
 ## script to analyse the sampling structure of rings around the target for
-## averaging 7 isotope cores, assessed with expectation value across ring
+## averaging 10 isotope cores, assessed with expectation value across ring
 ## combinations using Monte Carlo sampling of grid cells.
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
@@ -41,10 +41,10 @@ nmc     <- 10^5
 
 mc.cores <- ceiling(0.75 * parallel::detectCores())
 
-N <- 7
+N <- 10
 
 # ------------------------------------------------------------------------------
-# Run sampling for EDML site with N = 7
+# Run sampling for EDML site with N = 10
 
 cat("\n")
 cat(as.character(Sys.time()), "\n")
@@ -56,12 +56,12 @@ system.time(
   edml <- sampleNFromRings(N = N, nmc = nmc, field = field,
                            target = target$dat,
                            distance.field = target$dist,
-                           mc.cores = mc.cores, ngroups = 10) %>%
+                           mc.cores = mc.cores, ngroups = 50) %>%
     processCores(n.optim = n.optim)
 )
 
 # ------------------------------------------------------------------------------
-# Run sampling for Vostok site with N = 7
+# Run sampling for Vostok site with N = 10
 
 cat("Running Vostok...\n")
 
@@ -71,7 +71,7 @@ system.time(
   vost <- sampleNFromRings(N = N, nmc = nmc, field = field,
                            target = target$dat,
                            distance.field = target$dist,
-                           mc.cores = mc.cores, ngroups = 10) %>%
+                           mc.cores = mc.cores, ngroups = 50) %>%
     processCores(n.optim = n.optim)
 )
 
@@ -90,7 +90,7 @@ if (SAVE) {
   )
   attr(saved, "version") <- Sys.Date()
 
-  saveRDS(saved, file = "analysis/ring_occurrences_edml_vostok_N=7.rds")
+  saveRDS(saved, file = "analysis/ring_occurrences_edml_vostok_N=10.rds")
 
 }
 
