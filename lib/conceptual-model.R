@@ -108,7 +108,7 @@ modelT2mPWCorrelation <- function(r1, r2, alpha, tau = 2000,
 ##' @param tau.pw numeric; assumed decorrelation length of the effect of
 ##'   precipitation weighting in km.
 ##' @param xi numeric value in [0, 1] giving the fraction of the total
-##'   temperature variance which is redistributed into white noise through the
+##'   isotope variance which is redistributed into white noise through the
 ##'   effect of precipitation weighting, where '0' means no creation of white
 ##'   noise and '1' means full conversion into white noise.
 ##' @param c0 temperature-isotope correlation at zero distance.
@@ -158,5 +158,79 @@ t2m_oxy_correlation <- function(d, c0 = 0.3, c1 = 0.175, d0 = 1500,
                                 gamma = (c0 - c1) / d0) {
 
   ifelse(d <= d0, c0 - gamma * d, c1)
+
+}
+
+##' Run conceptual model
+##'
+##' This is a wrapper function to run the conceptual model for a given climate
+##' field to obtain the expected correlation between the target site temperature
+##' and the field variable averaged across combinations of two sites being
+##' distributed along concentric rings around the target.
+##'
+##' @param r numeric vector of ring radii to analyse; the two ring sites are
+##'   either placed on the same ring or on two different rings.
+##' @param alpha numeric vector of polar angle increments between the two sites;
+##'   defaults to analysing the full ring circumference in increments of 10
+##'   degree.
+##' @param tau numeric; assumed decorrelation length of the temperature field in
+##'   km (only needed for fields "t2m" and "t2m.pw").
+##' @param tau.d numeric; assumed decorrelation length of the oxygen isotope
+##'   field in km (only needed for field "oxy.pw").
+##' @param tau.pw numeric; assumed decorrelation length of the effect of
+##'   precipitation weighting in km (only needed for fields "t2m.pw" and
+##'   "oxy.pw").
+##' @param xi numeric value in [0, 1] giving the fraction of the total variance
+##'   which is redistributed into white noise through the effect of
+##'   precipitation weighting, where '0' means no creation of white noise and
+##'   '1' means full conversion into white noise (only needed for fields
+##'   "t2m.pw" and "oxy.pw").
+##' @param c0 temperature-isotope correlation for single sites at zero distance
+##'   (only needed for field "oxy.pw").
+##' @param c1 temperature-isotope correlation for single sites at distances
+##'   larger than the critical distance (only needed for field "oxy.pw").
+##' @param d0 critical distance after which the temperature-isotope correlation
+##'   for single sites stays constant (only needed for field "oxy.pw").
+##' @param field character flag to signal which climate field to analyse;
+##'   possible options are "t2m", "t2m.pw" and "oxy.pw".
+##' @return a symmetric \code{n x n} matrix with the modelled correlation
+##'   between the average across two climate field time series sampled from
+##'   rings and the target site temperature, where 'n' is the number of ring
+##'   radii \code{r}.
+##' @author Thomas Münch
+runConceptualModel <- function(r = seq(0, 2000, 10),
+                               alpha = seq(0, 350, 10) * (pi / 180),
+                               tau = 1900, tau.d = 1000, tau.pw = 500, xi = 0.7,
+                               c0 = 0.3, c1 = 0.175, d0 = 1500,
+                               field = "t2m") {
+
+  if (field == "t2m") {
+    FUN <- function(r1, r2, alpha, tau, ...) {
+      modelT2mCorrelation(r1, r2, alpha, tau)}
+  } else if (field == "t2m.pw") {
+    FUN <- function(r1, r2, alpha, tau, ...) {
+      modelT2mPWCorrelation(r1, r2, alpha, tau, tau.pw, xi)}
+  } else if (field == "oxy.pw") {
+    FUN <- function(r1, r2, alpha, tau, ...) {
+      modelOxyPWCorrelation(r1, r2, alpha, ...)}
+  } else {
+    stop("Unknown field request.")
+  }
+
+  n <- length(r)
+  m <- length(alpha)
+
+  model <- array(dim = c(m, n, n))
+  for (i in 1 : n) {
+    for (j in 1 : n) {
+
+      model[, i, j] <- FUN(r1 = r[i], r2 = r[j], alpha = alpha,
+                           tau = tau, tau.pw = tau.pw, xi = xi,
+                           tau.d = tau.d, c0 = c0, c1 = c1, d0 = d0)
+
+    }
+  }
+
+  apply(model, c(2, 3), mean)
 
 }
