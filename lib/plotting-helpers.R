@@ -189,11 +189,15 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
 ##'   \code{corelation}.
 ##' @param color.palette a colour palette function to be used to assign colors
 ##'   in the plot.
+##' @param dx numeric vector of minor axis tick positions; the default
+##'   \code{NULL} means to use internal tick positions.
+##' @param xlab.pos numeric vector of major axis tick positions and labels.
 ##' @param zlim correlation limits for the plot. If \code{NULL} use default
 ##'   values from \code{filled.contour}.
 ##' @param label character string providing a label for the plot.
 ##' @author Thomas Münch
 plotCorrelationContours <- function(correlation, distances, color.palette,
+                                    dx = NULL, xlab.pos = seq(500, 2000, 500),
                                     zlim = NULL, label = "") {
 
   if (diff(dim(correlation)) != 0) {
@@ -204,11 +208,10 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
   }
 
   if (!length(zlim)) zlim <- range(correlation, finite = TRUE)
+  if (!length(dx)) dx <- (distances - distances[1])[seq(2, 8, 2)]
 
   op <- par(LoadGraphicsPar(mar = c(0, 0, 0, 0), oma = c(5, 6.75, 2, 6.25)))
   on.exit(par(op))
-
-  dx <- (distances - distances[1])[seq(2, 8, 2)]
 
   filled.contour(x = distances, y = distances, z = correlation,
                  color.palette = color.palette, zlim = zlim,
@@ -218,9 +221,9 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
                    mtext("Distance of second core (km)", side = 2, line = 4,
                          cex = par()$cex.lab, las = 0)},
                  plot.axes = {
-                   axis(1, at = seq(500, 2000, 500));
+                   axis(1, at = xlab.pos);
                    axis(1, at = dx, labels = FALSE);
-                   axis(2, at = seq(500, 2000, 500));
+                   axis(2, at = xlab.pos);
                    axis(2, at = dx, labels = FALSE)})
 
   op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
