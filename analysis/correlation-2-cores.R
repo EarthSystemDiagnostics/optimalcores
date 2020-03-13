@@ -141,7 +141,7 @@ dev.off()
 
 Quartz(dpi = 300, file = file.path(
   SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
-plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.55),
+plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.6),
                         label = label[2])
 dev.off()
 

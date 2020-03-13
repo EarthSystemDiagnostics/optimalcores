@@ -59,7 +59,7 @@ filebase <- "conceptual_model_correlation_"
 
 Quartz(dpi = 300, file = file.path(
   SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
-plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.3, 1),
+plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
                         xlab.pos = seq(0, 2000, 500), label = label[1],
                         dx = seq(250, 1750, 500))
 dev.off()
@@ -75,6 +75,7 @@ Quartz(dpi = 300, file = file.path(
   SAVEPATH, "main", paste0(filebase, "03_oxy.pw.png")))
 plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.1, 0.25),
                         xlab.pos = seq(0, 2000, 500), label = label[3],
-                        dx = seq(250, 1750, 500))
+                        dx = seq(250, 1750, 500),
+                        key.axes = axis(4, seq(0.1, 0.25, by = 0.05)))
 dev.off()
 
