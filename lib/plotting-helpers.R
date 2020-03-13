@@ -195,10 +195,11 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
 ##' @param zlim correlation limits for the plot. If \code{NULL} use default
 ##'   values from \code{filled.contour}.
 ##' @param label character string providing a label for the plot.
+##' @param ... further parameters passed on to \code{filled.contour}.
 ##' @author Thomas Münch
 plotCorrelationContours <- function(correlation, distances, color.palette,
                                     dx = NULL, xlab.pos = seq(500, 2000, 500),
-                                    zlim = NULL, label = "") {
+                                    zlim = NULL, label = "", ...) {
 
   if (diff(dim(correlation)) != 0) {
     stop("Correlation input is not a square matrix.")
@@ -224,7 +225,8 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
                    axis(1, at = xlab.pos);
                    axis(1, at = dx, labels = FALSE);
                    axis(2, at = xlab.pos);
-                   axis(2, at = dx, labels = FALSE)})
+                   axis(2, at = dx, labels = FALSE)},
+                 ...)
 
   op.usr <- par(usr = c(0, 1, 0, 1), xlog = FALSE, ylog = FALSE)
   text(1.16, 0.5, labels = "Correlation",
