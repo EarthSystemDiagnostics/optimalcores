@@ -60,6 +60,17 @@ system.time(
     processCores(n.optim = n.optim)
 )
 
+# strip off input data to save disk space and remove save intermediate results
+if (SAVE) {
+
+  edml$input <- NULL
+
+  saveRDS(edml, file = "analysis/tmp_edml.rds")
+
+  rm(edml)
+
+}
+
 # ------------------------------------------------------------------------------
 # Run sampling for Vostok site with N = 10
 
@@ -75,18 +86,25 @@ system.time(
     processCores(n.optim = n.optim)
 )
 
+# strip off input data to save disk space and remove save intermediate results
+if (SAVE) {
+
+  vost$input <- NULL
+
+  saveRDS(vost, file = "analysis/tmp_vost.rds")
+
+  rm(vost)
+
+}
+
 # ------------------------------------------------------------------------------
 # Save output
 
 if (SAVE) {
 
-  # strip off input data to save disk space
-  edml$input <- NULL
-  vost$input <- NULL
-
   saved <- list(
-    edml = edml,
-    vost = vost
+    edml = readRDS(file = "analysis/tmp_edml.rds"),
+    vost = readRDS(file = "analysis/tmp_vost.rds")
   )
   attr(saved, "version") <- Sys.Date()
 
