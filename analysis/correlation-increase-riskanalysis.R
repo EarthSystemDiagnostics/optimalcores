@@ -15,7 +15,7 @@ model <- selectData()
 target1 <- setTarget(model$t2m, site = "edml")
 target2 <- setTarget(model$t2m, site = "vostok")
 
-N <- c(1, 2, 3, 5, 7)
+N <- c(1, 2, 3, 5, 7, 10)
 
 edml <- list(optim = numeric(length(N)), local = numeric(length(N)))
 vost <- list(optim = numeric(length(N)), local = numeric(length(N)))
@@ -78,6 +78,16 @@ edml$local[5] <- dat$edml$correlation$mean[1]
 vost$optim[5] <- dat$vost$optimal.rings$correlation$mean
 vost$local[5] <- dat$vost$correlation$mean[1]
 
+# N = 10
+
+dat <- readRDS("analysis/ring_occurrences_edml_vostok_N=10.rds")
+
+edml$optim[6] <- dat$edml$optimal.rings$correlation$mean
+edml$local[6] <- dat$edml$correlation$mean[1]
+
+vost$optim[6] <- dat$vost$optimal.rings$correlation$mean
+vost$local[6] <- dat$vost$correlation$mean[1]
+
 # ------------------------------------------------------------------------------
 # Get index of optimal ring combination
 
@@ -114,7 +124,7 @@ op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(5, 6, 2.5, 1), xaxs = "i", yaxs = "i"))
 
 plot(N, edml$optim, type = "n", xlab = "", ylab = "", log = "x", axes = FALSE,
-     xlim = c(1, 7), ylim = c(0.2, 0.5))
+     xlim = range(N), ylim = c(0.2, 0.5))
 axis(1, at = N)
 axis(2)
 mtext("Number of averaged sites", side = 1, line = 3.5, cex = par()$cex.lab)
