@@ -89,21 +89,31 @@ vost$optim[6] <- dat$vost$optimal.rings$correlation$mean
 vost$local[6] <- dat$vost$correlation$mean[1]
 
 # ------------------------------------------------------------------------------
-# Get index of optimal ring combination
+# Distribution of single correlations for optimal ring combination (N = 3)
 
-target <- c(double.edml$optimal.rings$combinations)
-i.opt.edml <- which(apply(double.edml$input$ring.combinations, 1,
-                          function(x) {all.equal(x, target)}) == "TRUE")
+model  <- selectData()
+field  <- model$lnd.oxy.pw
 
-target <- c(double.vost$optimal.rings$combinations)
-i.opt.vost <- which(apply(double.vost$input$ring.combinations, 1,
-                          function(x) {all.equal(x, target)}) == "TRUE")
+target  <- setTarget(model$t2m, site = "edml")
+system.time(
+n3.edml <- sampleNFromRings(N = 3, nmc = 10^5, field = field,
+                            target = target$dat,
+                            distance.field = target$dist,
+                            default.ring.combination = rbind(c(1, 4, 5)),
+                            .parallel = FALSE)
+)
 
-# ------------------------------------------------------------------------------
-# Distribution of single correlations for optimal ring combination
+target  <- setTarget(model$t2m, site = "vostok")
+system.time(
+n3.vost <- sampleNFromRings(N = 3, nmc = 10^5, field = field,
+                            target = target$dat,
+                            distance.field = target$dist,
+                            default.ring.combination = rbind(c(2, 3, 3)),
+                            .parallel = FALSE)
+)
 
-dist1 <- na.omit(double.edml$input$correlations[i.opt.edml, ])
-dist2 <- na.omit(double.vost$input$correlations[i.opt.vost, ])
+dist1 <- n3.edml$correlations[1, ]
+dist2 <- n3.vost$correlations[1, ]
 
 # how many of these are above the local correlation?
 length(which(dist1 > edml$local[1])) / length(dist1)
@@ -146,18 +156,19 @@ legend("bottomright", c("Local ring", "Optimal combination"), col = "darkgrey",
        lty = c(2, 1), lwd = 1.5, bty = "n")
 
 hist(dist1, xlab = "", ylab = "", main = "", axes = FALSE,
-     xlim = c(0, 0.6), ylim = c(0, 120), breaks = 24,
+     xlim = c(0, 0.6), ylim = c(0, 25000), breaks = 24,
      col = adjustcolor(col1, alpha = 0.2))
 axis(1)
-axis(2, at = seq(0, 120, 20))
+axis(2, at = seq(0, 25000, 5000), labels = seq(0, 25, 5))
 mtext("Correlation", side = 1, line = 3.5, cex = par()$cex.lab)
-mtext("Counts", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
+mtext(expression("Counts ("%*%10^3 * ")"), side = 2, line = 3.5,
+      cex = par()$cex.lab, las = 0)
 mtext(label2, side = 3, line = -1.5, cex = par()$cex.lab, adj = 0.02, padj = 0)
 
-lines(x = rep(edml$local[1], 2), y = c(0, 150), lwd = 2.5, col = col1)
+lines(x = rep(edml$local[1], 2), y = c(0, 25000), lwd = 2.5, col = col1)
 
 hist(dist2, add = TRUE, col = adjustcolor(col2, alpha = 0.2))
-lines(x = rep(vost$local[1], 2), y = c(0, 150), lwd = 2.5, col = col2)
+lines(x = rep(vost$local[1], 2), y = c(0, 25000), lwd = 2.5, col = col2)
 
 par(op)
 dev.off()
