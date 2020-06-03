@@ -359,6 +359,17 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   cells in \code{field} relative to the grid cell of the target site. The
 ##'   spatial structure of these distances must follow the structure of
 ##'   \code{field}.
+##' @param ngroups specify an integer number of groups into which the ring bin
+##'   combinations are subdivided, which forces the ring sampling to be executed
+##'   successively in a loop over these groups. This setup can be necessary in
+##'   order to limit RAM demand needed for running a large number of cores
+##'   (\code{N} > 5) in combination with a large number of Monte Carlo
+##'   iterations. Defaults to \code{NULL} which uses no grouping.
+##' @param default.ring.combination an optional matrix with \code{N} columns
+##'   where each row specifies a set of \code{N} indices for a certain ring bin
+##'   combination. If this parameter is provided, only grid cells from these
+##'   given ring bin combinations are sampled. Defaults to \code{NULL} which
+##'   samples all available ring bin combinations.
 ##' @param .parallel logical; whether to parallelize the correlation
 ##'   computations of the individual ring bin combinations. Defaults to
 ##'   \code{TRUE}.
@@ -366,12 +377,6 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##'   computation, i.e. at most how many child processes will be run
 ##'   simultaneously. The default \code{NULL} means to use the value from
 ##'   \code{parallel::detectCores()}.
-##' @param ngroups specify an integer number of groups into which the ring bin
-##'   combinations are subdivided, which forces the ring sampling to be executed
-##'   successively in a loop over these groups. This setup can be necessary in
-##'   order to limit RAM demand needed for running a large number of cores
-##'   (\code{N} > 5) in combination with a large number of Monte Carlo
-##'   iterations. Defaults to \code{NULL} which uses no grouping.
 ##' @return a list with four elements:
 ##'   * "ring.distances": numeric vector with the mid-point distances in km
 ##'     of the sampled ring bins from the target.
@@ -389,8 +394,8 @@ sampleTwoFromRings <- function(max.dist = 2000, delta.d = 250,
 ##' @author Thomas Münch
 sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
                              field, target, distance.field,
-                             .parallel = TRUE, mc.cores = NULL,
-                             ngroups = NULL) {
+                             ngroups = NULL, default.ring.combination = NULL,
+                             .parallel = TRUE, mc.cores = NULL) {
 
   class(field) <- attr(field, "oclass")
 
@@ -426,9 +431,17 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
   # grid cells within each ring bin
   sites <- sapply(ring.dist, getRingGrids, distance.field = distance.field)
 
-  # all possible combinations of ring bins for N cores
-  ring.comb.full <- arrangements::combinations(x = 1 : length(ring.dist),
-                                               k = N, replace = TRUE)
+  if (!is.null(default.ring.combination)) {
+    # use only given ring bin combinations
+    if (ncol(default.ring.combination) != N) {
+      stop("Number of default ring bins does not match core number to sample.")
+    }
+    ring.comb.full <- default.ring.combination
+  } else {
+    # use all possible combinations of ring bins for N cores
+    ring.comb.full <- arrangements::combinations(x = 1 : length(ring.dist),
+                                                 k = N, replace = TRUE)
+  }
 
   # index vector of the number of ring bin combinations
   x <- seq(nrow(ring.comb.full))
@@ -444,6 +457,9 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 
     # combinations for this index group
     ring.comb <- ring.comb.full[groups[[i]], ]
+
+    # fix matrix if needed
+    if (is.null(dim(ring.comb))) ring.comb <- rbind(ring.comb)
 
     # obtain nmc Monte Carlo grid cell sets for each ring bin combination
     grid.indices <- lapply(split(ring.comb, row(ring.comb)),
