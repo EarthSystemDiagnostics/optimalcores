@@ -28,8 +28,8 @@ xi <- 0.73
 
 # t2m-oxy correlation parameters (simple linear decay with distance)
 c0 <- 0.4
-c1 <- 0.2
-d0 <- 1500
+c1 <- 0.
+d0 <- 6000
 
 # ------------------------------------------------------------------------------
 # Run model for the various fields
@@ -73,9 +73,9 @@ dev.off()
 
 Quartz(dpi = 300, file = file.path(
   SAVEPATH, "main", paste0(filebase, "03_oxy.pw.png")))
-plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.1, 0.25),
+plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.25),
                         xlab.pos = seq(0, 2000, 500), label = label[3],
                         dx = seq(250, 1750, 500),
-                        key.axes = axis(4, seq(0.1, 0.25, by = 0.05)))
+                        key.axes = axis(4, seq(0.15, 0.25, by = 0.02)))
 dev.off()
 
