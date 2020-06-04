@@ -1,6 +1,6 @@
 ##
 ## aim:
-## script to estimate parameters of the coceptual model.
+## script to estimate parameters of the conceptual model.
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
 ## Muench, Werner and Laepple (2019), in prep.
@@ -19,7 +19,7 @@ vos.region <- setTargetRegion(field = model$lnd.t2m,
                               min.lon = 89.5, max.lon = 124.5)
 
 # ------------------------------------------------------------------------------
-# decorrelation lengths
+# Decorrelation lengths
 
 # t2m
 
@@ -91,7 +91,7 @@ xi.dml <- 1 - (avg.correlation.dml)^2
 xi.vos <- 1 - (avg.correlation.vos)^2
 
 # ------------------------------------------------------------------------------
-# plot comparison of DML temperature decorrelation lengths
+# Plot comparison of DML temperature decorrelation lengths
 
 x <- seq(min(dml.t2m$distances$mean), max(dml.t2m$distances$mean), 1)
 
@@ -105,7 +105,7 @@ label <- c(expression(italic("T")["2m"]^{"(pw)"}),
            "parameter curve",
            expression(italic("T")["2m"] * " with fit"))
 
-Quartz(file.path(SAVEPATH, "main", "fig_B01.pdf"))
+Quartz(file.path(SAVEPATH, "side-results", "t2m_decorrelation_fits_dml.pdf"))
 op <- par(LoadGraphicsPar())
 
 plot(dml.t2m$distances$mean, dml.t2m$correlation$mean, type = "n",

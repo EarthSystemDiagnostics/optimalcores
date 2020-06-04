@@ -150,7 +150,8 @@ for (i in 1 : ncol(model$lnd.t2m)) {
 
 }
 
-Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"))
+Quartz(file.path(SAVEPATH, "side-results",
+                 "optimal_picking_distance_single_core_antarctica.pdf"))
 op <- par(LoadGraphicsPar())
 
 phist <- hist(optimal.distances, breaks = seq(0, 1000, 50),
