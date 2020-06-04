@@ -131,3 +131,14 @@ legend("topright", label, col = c(col1, col3, col4, col2),
 
 par(op)
 dev.off()
+
+# ------------------------------------------------------------------------------
+# RMSD of t2m.pw fits
+
+x <- dml.t2m.pw$distances$mean
+
+independent.fit <- sqrt(1 - xi.dml.t2m.pw) * exp(-x/tau.dml.t2m.pw)
+parameter.fit   <- sqrt(1 - xi.dml) * exp(-x/tau.dml.t2m)
+
+ecustools::rmsd(dml.t2m.pw$correlation$mean, independent.fit)
+ecustools::rmsd(dml.t2m.pw$correlation$mean, parameter.fit)
