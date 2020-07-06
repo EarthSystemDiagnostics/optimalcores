@@ -25,11 +25,17 @@ tau.pw <- 500
 
 # intermittency parameter (DML region estimate)
 xi <- 0.73
+# intermittency parameter (Vostok region estimate)
+xi <- 0.82
 
-# t2m-oxy correlation parameters (simple linear decay with distance)
+# t2m-oxy correlation parameters DML (simple linear decay with distance)
 c0 <- 0.4
 c1 <- 0.
 d0 <- 6000
+# t2m-oxy correlation parameters Vostok
+c0 <- 0.5
+c1 <- 0.
+d0 <- 2500
 
 # ------------------------------------------------------------------------------
 # Run model for the various fields
@@ -55,7 +61,8 @@ label <- c(expression(bold("(a) ") * italic("T")["2m"]),
            expression(bold("(b) ") * italic("T")["2m"]^{"(pw)"}),
            expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
 
-filebase <- "conceptual_model_correlation_"
+filebase <- "conceptual_model_correlation_dml_"
+filebase <- "conceptual_model_correlation_vostok_"
 
 Quartz(dpi = 300, file = file.path(
   SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
