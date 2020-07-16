@@ -30,7 +30,7 @@ quantile(t2m.decorrelation.df$dat, na.rm = TRUE, probs = c(0.05, 0.95))
 t2m.decorrelation.df$dat[t2m.decorrelation.df$dat <= 800] <- 800
 t2m.decorrelation.df$dat[t2m.decorrelation.df$dat >= 2500] <- 2500
 
-Quartz(file.path(SAVEPATH, "main", "echam5_mpiom_wiso_t2m_decorrelation.pdf"),
+Quartz(file.path(SAVEPATH, "main", "fig_02.pdf"),
        height = 6, width = 6)
 op <- par(LoadGraphicsPar())
 
@@ -44,7 +44,7 @@ p <- p +
     scale_fill_gradientn(colours = col.scale,
                          na.value = "transparent",
                          limits = c(500, 2500),
-                         name = bquote(tau * " (km)        ")) +
+                         name = bquote(tau * " (km)")) +
 
     theme(legend.key.height = unit(0.75, units = "inches"),
           legend.text = element_text(size = 15),

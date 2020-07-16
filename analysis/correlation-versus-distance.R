@@ -102,7 +102,7 @@ col3 <- "dodgerblue3"
 label1 <- expression(bold("(a) ") * "DML")
 label2 <- expression(bold("(b) ") * "Vostok")
 
-Quartz(file.path(SAVEPATH, "main", "fig_04.pdf"),
+Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"),
        height = 5.5, width = 12)
 op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(0, 0, 0, 0),
