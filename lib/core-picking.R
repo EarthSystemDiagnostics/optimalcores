@@ -71,20 +71,39 @@ doPicking <- function(N = 1, target, field, picking.sites,
     metric = vector()
   )
 
-  for (i in 1 : nmc) {
+  if (N == 1) {
 
-    i.sample <- sample(picking.sites, size = N, replace = replace)
+    for (i in 1 : length(picking.sites)) {
 
-    sav$sample[[i]] <- data.frame(
-      index = i.sample,
-      lat = lats[i.sample],
-      lon = lons[i.sample]
-    )
+      i.sample <- picking.sites[i]
 
-    y <- rowMeans(field[, i.sample, drop = FALSE], na.rm = TRUE)
+      sav$sample[[i]] <- data.frame(
+        index = i.sample,
+        lat = lats[i.sample],
+        lon = lons[i.sample]
+      )
 
-    sav$metric[i] <- COSTFUN(target, y, ...)
+      sav$metric[i] <- COSTFUN(target, field[, i.sample], ...)
 
+    }
+
+  } else {
+
+    for (i in 1 : nmc) {
+
+      i.sample <- sample(picking.sites, size = N, replace = replace)
+
+      sav$sample[[i]] <- data.frame(
+        index = i.sample,
+        lat = lats[i.sample],
+        lon = lons[i.sample]
+      )
+
+      y <- rowMeans(field[, i.sample, drop = FALSE], na.rm = TRUE)
+
+      sav$metric[i] <- COSTFUN(target, y, ...)
+
+    }
   }
 
   decreasing <- ifelse(maximize, TRUE, FALSE)
