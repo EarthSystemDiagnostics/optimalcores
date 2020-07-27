@@ -158,6 +158,7 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##' @param return.all logical; should all picking results (number of \code{nmc}
 ##'   for each N) be returned (\code{TRUE}, the default) or only the optimal one
 ##'   (according to the setting of \code{maximize})?
+##' @param verbose logical; switch on/off printing of progress message.
 ##' @return a list of three elements:
 ##'   * "correlation.map": a \code{"pField"} or \code{"pTs"} object with the
 ##'     correlation between every grid cell in \code{field} and the
@@ -168,10 +169,10 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##'     output of \code{\link{doPicking}}.
 ##' @author Thomas Münch
 pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
-                       radius = 1000, target.field, study.field,
+                       radius = 2000, target.field, study.field,
                        nmc = 1000, replace = FALSE,
                        COSTFUN = cor, ..., maximize = TRUE,
-                       return.all = TRUE) {
+                       return.all = TRUE, verbose = TRUE) {
 
   target.site <- setTarget(target.field, site = target,
                            lat0 = lat0, lon0 = lon0)
@@ -194,7 +195,7 @@ pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
 
   for (i in 1 : length(N)) {
 
-    print(sprintf("Number of cores: %i", N[i]))
+    if (verbose) print(sprintf("Number of cores: %i", N[i]))
     res$picking[[i]] <- doPicking(N = N[i], target = target.site$dat,
                                   field = study.field,
                                   picking.sites = picking.sites,
