@@ -27,31 +27,31 @@ op <- par(LoadGraphicsPar(mfcol = c(2, 2),
                           mar = c(0, 0, 0, 0),
                           oma = c(5, 7.5, 2.5, 0.5)))
 
-plotRingOccurrences(dat$edml$N5, xlab = "", xaxt = "n", ylab = "")
+plotRingOccurrences(dat$edml$N3, xlab = "", xaxt = "n", ylab = "")
 abline(h = 0.5, v = 2250, lwd = 5)
 mtext("(a)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$edml$N3, ylab = "")
+plotRingOccurrences(dat$edml$N5, ylab = "")
 abline(v = 2250, lwd = 5)
 mtext("(c)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$vost$N5, xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plotRingOccurrences(dat$vost$N3, xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 abline(h = 0.5, lwd = 5)
 mtext("(b)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$vost$N3, ylab = "", yaxt = "n")
+plotRingOccurrences(dat$vost$N5, ylab = "", yaxt = "n")
 mtext("(d)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
 mtext("Rank", side = 2, line = 3.5, cex = par()$cex.lab, las = 0,
       outer = TRUE, at = 0.5)
 mtext("N = 3", side = 2, line = 5.5, cex = par()$cex.lab, las = 0,
-      outer = TRUE, at = 0.25)
-mtext("N = 5", side = 2, line = 5.5, cex = par()$cex.lab, las = 0,
       outer = TRUE, at = 0.75)
+mtext("N = 5", side = 2, line = 5.5, cex = par()$cex.lab, las = 0,
+      outer = TRUE, at = 0.25)
 
 mtext("EDML", side = 3, line = 0.25, cex = par()$cex.lab,
       outer = TRUE, at = 0.03)
