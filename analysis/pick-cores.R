@@ -161,7 +161,8 @@ phist <- hist(optimal.distances, breaks = seq(0, 2000, 100),
 dev.off()
 par(op)
 
-sum(phist$counts[c(9 : 12, 17 : 20)]) / sum(phist$counts)
+sum(phist$counts[1 : 4]) / sum(phist$counts)
+sum(phist$counts[4 : 10]) / sum(phist$counts)
 
 # ------------------------------------------------------------------------------
 # Sketch weighting of histograms with number of picking options
