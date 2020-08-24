@@ -126,7 +126,7 @@ egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3)
 dev.copy2pdf(file = file.path(SAVEPATH, "main", "echam5_mpiom_wiso_picking.pdf"))
 
 # ------------------------------------------------------------------------------
-# distance of optimal single core from the target; all Antarctic sites
+# Distance of optimal single core from the target; all Antarctic sites
 
 continental.latitudes  <- GetLat(model$lnd.t2m)
 continental.longitudes <- GetLon(model$lnd.t2m)
@@ -154,7 +154,7 @@ Quartz(file.path(SAVEPATH, "side-results",
                  "optimal_picking_distance_single_core_antarctica.pdf"))
 op <- par(LoadGraphicsPar())
 
-phist <- hist(optimal.distances, breaks = seq(0, 2000, 50),
+phist <- hist(optimal.distances, breaks = seq(0, 2000, 100),
               main = "", xlab = "Distance from target (km)", ylab = "Counts",
               col = "darkgrey", border = "dimgrey")
 
@@ -162,3 +162,37 @@ dev.off()
 par(op)
 
 sum(phist$counts[c(9 : 12, 17 : 20)]) / sum(phist$counts)
+
+# ------------------------------------------------------------------------------
+# Sketch weighting of histograms with number of picking options
+
+# define preliminary weights from number of grid cells around Kohnen
+target <- setTarget(model$t2m)
+
+weights <- numeric()
+for (d in seq(0, 1900, 100)) {
+
+  weights <- c(weights, length(which(target$dist >= d & target$dist < d + 100)))
+}
+
+# get phist once for t2m as target, once for t2m.pw as target
+h1a <- h1b <- phist
+h2a <- h2b <- phist
+
+h1b$counts <- h1b$counts / weights
+h2b$counts <- h2b$counts / weights
+
+Quartz()
+plot(h1a, main = "", xlab = "Distance from target (km)", ylab = "Counts",
+     col = "darkgrey", border = "dimgrey")
+
+plot(h1b, main = "", xlab = "Distance from target (km)", ylab = "Counts",
+     col = "darkgrey", border = "dimgrey")
+
+plot(h2a, main = "", xlab = "Distance from target (km)", ylab = "Counts",
+     col = "darkgrey", border = "dimgrey")
+
+plot(h2b, main = "", xlab = "Distance from target (km)", ylab = "Counts",
+     col = "darkgrey", border = "dimgrey")
+
+dev.off()
