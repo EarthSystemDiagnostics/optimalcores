@@ -111,7 +111,8 @@ op <- par(LoadGraphicsPar(mfcol = c(1, 2),
 plot(dml$t2m$distances$mean, dml$t2m$correlation$mean, type = "n",
      xlab = "", ylab = "",
      xlim = c(0, 2125), ylim = c(0, 1))
-mtext("Distance (km)", side = 1, line = 3.5, cex = par()$cex.lab)
+mtext("Distance from target site (km)", side = 1, line = 3.5,
+      cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
 
@@ -127,7 +128,8 @@ lines(dml$oxy.pw$distances$mean, dml$oxy.pw$correlation$mean,
 plot(vos$t2m$distances$mean, vos$t2m$correlation$mean, type = "n",
      xlab = "", ylab = "", yaxt = "n",
      xlim = c(0, 2125), ylim = c(0, 1))
-mtext("Distance (km)", side = 1, line = 3.5, cex = par()$cex.lab)
+mtext("Distance from target site (km)", side = 1, line = 3.5,
+      cex = par()$cex.lab)
 mtext(label2, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
 
 lines(x, exp(-x/tau2), lty = 2, lwd = 1.5)
