@@ -8,8 +8,6 @@
 
 source("init.R")
 
-library(ggplot2)
-
 # ------------------------------------------------------------------------------
 # Correlation analyses between t2m and precip-weighted d18O
 

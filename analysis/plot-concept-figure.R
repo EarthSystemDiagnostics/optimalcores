@@ -8,8 +8,6 @@
 
 source("init.R")
 
-library(ggplot2)
-
 # ------------------------------------------------------------------------------
 # Settings
 
@@ -47,7 +45,6 @@ vost.region <- data.frame(
 # Plotting
 
 Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"), height = 6, width = 6)
-op <- par(LoadGraphicsPar())
 
 p <- ggplot()
 
@@ -78,4 +75,3 @@ p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
 print(p)
 
 dev.off()
-par(op)

@@ -9,9 +9,6 @@
 
 source("init.R")
 
-library(magrittr)
-library(ggplot2)
-
 # save the picking data?
 SAVE <- TRUE
 

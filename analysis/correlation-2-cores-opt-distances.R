@@ -80,7 +80,6 @@ df <- data.frame(lon = continental.longitudes[sites],
 Quartz(file.path(
   SAVEPATH, "side-results", "ring_sampling_N=2_fix_central_distance_map.pdf"),
   height = 6, width = 6)
-op <- par(LoadGraphicsPar())
 
 p <- ggplot()
 
@@ -109,5 +108,4 @@ p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
 print(p)
 
 dev.off()
-par(op)
 

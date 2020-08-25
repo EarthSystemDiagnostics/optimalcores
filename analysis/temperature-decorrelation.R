@@ -8,8 +8,6 @@
 
 source("init.R")
 
-library(ggplot2)
-
 # ------------------------------------------------------------------------------
 # Estimate decorrelation lengths for t2m
 
@@ -32,7 +30,6 @@ t2m.decorrelation.df$dat[t2m.decorrelation.df$dat >= 2500] <- 2500
 
 Quartz(file.path(SAVEPATH, "main", "fig_02.pdf"),
        height = 6, width = 6)
-op <- par(LoadGraphicsPar())
 
 p <- ggplot()
 
@@ -62,5 +59,4 @@ p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
 print(p)
 
 dev.off()
-par(op)
 
