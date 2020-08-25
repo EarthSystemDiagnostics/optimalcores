@@ -11,6 +11,7 @@ install.packages("egg")
 install.packages("magrittr")
 install.packages("RColorBrewer")
 
-devtools::install_github("EarthSystemDiagnostics/ecustools")
-devtools::install_github("EarthSystemDiagnostics/pfields")
+# install.packages("remotes")
+remotes::install_github("EarthSystemDiagnostics/ecustools")
+remotes::install_github("EarthSystemDiagnostics/pfields")
 
