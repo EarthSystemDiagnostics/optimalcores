@@ -2,7 +2,7 @@
 
 ## Overview
 
-**optimalcores** is an R software project to analyse the temperature and isotope time series in the isotope-enabled ECHAM5/MPIOM-wiso past1000 climate model simulation and, specifically, to determine optimal spatial sampling configurations for Antarctic ice cores which maximize the correlation with a target site temperature time series.
+**optimalcores** is an R software project to analyse the temperature and isotope time series in the isotope-enabled ECHAM5/MPI-OM-wiso past1000 climate model simulation and, specifically, to determine optimal spatial sampling configurations for Antarctic ice cores which maximize the correlation with a target site temperature time series.
 
 The project is subdivided into three main components:
 - the `data/` folder provides the climate model data as an R data file,
