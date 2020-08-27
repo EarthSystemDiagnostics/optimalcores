@@ -13,7 +13,7 @@ The **optimalcores** software is the basis for the results published in Münch, 
 
 All code has been written by [Dr. Thomas Münch](https://www.awi.de/ueber-uns/organisation/mitarbeiter/thomas-muench.html) at the [Alfred Wegener Institute Helmholtz Centre for Polar and Marine Research](https://www.awi.de/). For further information, code enhancements or potential bugs, please write an email or open an issue here. This work was supported by Helmholtz funding through the Polar Regions and Coasts in the Changing Earth System (PACES) programme of the Alfred Wegener Institute.
 
-The original climate model data used here is archived under xxx.
+The original climate model data used here is archived under [doi:10.5281/zenodo.4001565](https://doi.org/10.5281/zenodo.4001565).
 
 ## Getting started
 
