@@ -32,7 +32,8 @@ abline(h = 0.5, v = 2250, lwd = 5)
 mtext("(a)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$edml$N5, ylab = "")
+plotRingOccurrences(dat$edml$N5,
+                    xlab = "Distance from target site (km)", ylab = "")
 abline(v = 2250, lwd = 5)
 mtext("(c)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
@@ -42,7 +43,8 @@ abline(h = 0.5, lwd = 5)
 mtext("(b)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$vost$N5, ylab = "", yaxt = "n")
+plotRingOccurrences(dat$vost$N5,
+                    xlab = "Distance from target site (km)", ylab = "", yaxt = "n")
 mtext("(d)", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 

@@ -137,7 +137,7 @@ plot(N, edml$optim, type = "n", xlab = "", ylab = "", log = "x", axes = FALSE,
      xlim = range(N), ylim = c(0.2, 0.5))
 axis(1, at = N)
 axis(2)
-mtext("Number of averaged sites", side = 1, line = 3.5, cex = par()$cex.lab)
+mtext("Number of averaged locations", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 4.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = -1.5, cex = par()$cex.lab, adj = 0.02, padj = 0)
 
