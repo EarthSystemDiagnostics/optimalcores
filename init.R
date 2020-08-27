@@ -9,19 +9,15 @@
 # ------------------------------------------------------------------------------
 # Load required packages
 
-if (!require("ecustools", quietly = TRUE)) {
-  stop("Package \"ecustools\" needed for \"optimalcores\".",
-       call. = FALSE)
-}
+required.packages <- c("abind", "arrangements", "ecustools", "egg", "magrittr",
+                       "pfields", "RColorBrewer")
 
-if (!require("arrangements", quietly = TRUE)) {
-  stop("Package \"arrangements\" needed for \"optimalcores\".",
-       call. = FALSE)
-}
+for (pkg in required.packages) {
 
-if (!require("abind", quietly = TRUE)) {
-  stop("Package \"abind\" needed for \"optimalcores\".",
-       call. = FALSE)
+  if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
+    stop(sprintf("Package \"%s\" needed for \"optimalcores\". ", pkg),
+         "Please install it.", call. = FALSE)
+  }
 }
 
 
