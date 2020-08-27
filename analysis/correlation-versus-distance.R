@@ -99,8 +99,8 @@ col1 <- "black"
 col2 <- "green4"
 col3 <- "dodgerblue3"
 
-label1 <- expression(bold("(a) ") * "DML")
-label2 <- expression(bold("(b) ") * "Vostok")
+label1 <- expression("(" * bold("a") * ") DML")
+label2 <- expression("(" * bold("b") * ") Vostok")
 
 Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"),
        height = 5.5, width = 12)

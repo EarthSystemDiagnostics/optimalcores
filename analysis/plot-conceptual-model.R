@@ -57,9 +57,9 @@ oxy.pw <- runConceptualModel(r, tau = tau, tau.d = tau.d, tau.pw = tau.pw,
 
 color.palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 distances <- r
-label <- c(expression(bold("(a) ") * italic("T")["2m"]),
-           expression(bold("(b) ") * italic("T")["2m"]^{"(pw)"}),
-           expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
+label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
+           expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),
+           expression("(" * bold("c") * ") " * delta^{18} * "O"^{"(pw)"}))
 
 filebase <- "conceptual_model_correlation_dml_"
 filebase <- "conceptual_model_correlation_vostok_"

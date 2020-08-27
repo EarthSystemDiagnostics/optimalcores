@@ -125,8 +125,8 @@ length(which(dist2 > vost$local[1])) / length(dist2)
 col1 = "firebrick4"
 col2 = "dodgerblue4"
 
-label1 <- expression(bold("(a)"))
-label2 <- expression(bold("(b)"))
+label1 <- expression(bold("a"))
+label2 <- expression(bold("b"))
 
 Quartz(file.path(SAVEPATH, "main", "fig_08.pdf"),
        height = 5, width = 12)
@@ -139,7 +139,8 @@ axis(1, at = N)
 axis(2)
 mtext("Number of averaged locations", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext("Correlation", side = 2, line = 4.5, cex = par()$cex.lab, las = 0)
-mtext(label1, side = 3, line = -1.5, cex = par()$cex.lab, adj = 0.02, padj = 0)
+mtext(label1, side = 3, line = -1.5, cex = par()$cex.lab,
+      adj = 0.02, padj = -0.35)
 
 ecustools::Polyplot(N, y1 = edml$local, y2 = edml$optim, col = col1)
 ecustools::Polyplot(N, y1 = vost$local, y2 = vost$optim, col = col2)
@@ -163,7 +164,8 @@ axis(2, at = seq(0, 25000, 5000), labels = seq(0, 25, 5))
 mtext("Correlation", side = 1, line = 3.5, cex = par()$cex.lab)
 mtext(expression("Counts ("%*%10^3 * ")"), side = 2, line = 3.5,
       cex = par()$cex.lab, las = 0)
-mtext(label2, side = 3, line = -1.5, cex = par()$cex.lab, adj = 0.02, padj = 0)
+mtext(label2, side = 3, line = -1.5, cex = par()$cex.lab,
+      adj = 0.02, padj = -0.35)
 
 lines(x = rep(edml$local[1], 2), y = c(0, 25000), lwd = 2.5, col = col1)
 

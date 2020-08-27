@@ -118,10 +118,10 @@ cat("done.\n")
 
 color.palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
 distances <- attr(t2m, "scale")
-label <- c(expression(bold("(a) ") * italic("T")["2m"]),
-           expression(bold("(b) ") * italic("T")["2m"]^{"(pw)"}),
-           expression(bold("(x) ") * delta^{18} * "O"),
-           expression(bold("(c) ") * delta^{18} * "O"^{"(pw)"}))
+label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
+           expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),
+           expression("(" * bold("x") * ") " * delta^{18} * "O"),
+           expression("(" * bold("c") * ") " * delta^{18} * "O"^{"(pw)"}))
 
 filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_", cmd.arg)
 
