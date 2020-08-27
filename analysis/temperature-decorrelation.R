@@ -28,8 +28,7 @@ quantile(t2m.decorrelation.df$dat, na.rm = TRUE, probs = c(0.05, 0.95))
 t2m.decorrelation.df$dat[t2m.decorrelation.df$dat <= 800] <- 800
 t2m.decorrelation.df$dat[t2m.decorrelation.df$dat >= 2500] <- 2500
 
-Quartz(file.path(SAVEPATH, "main", "fig_02.pdf"),
-       height = 6, width = 6)
+Quartz(height = 6, width = 6)
 
 p <- ggplot()
 
@@ -58,5 +57,5 @@ p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
 
 print(p)
 
-dev.off()
+dev.copy2pdf(file = file.path(SAVEPATH, "main", "fig_02.pdf"))
 
