@@ -89,7 +89,7 @@ if (SAVE) {
 }
 
 # ------------------------------------------------------------------------------
-# Plotting of EDML and Vostok results
+# Plot EDML and Vostok results (run above code or load "./analysis/picking.rds")
 
 colour.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
 

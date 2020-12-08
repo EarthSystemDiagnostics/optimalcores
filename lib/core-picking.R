@@ -30,6 +30,14 @@
 ##' @param return.all logical; should all picking results be returned
 ##'   (\code{TRUE}, the default) or only the optimal one (according to the
 ##'   setting of \code{maximize})?
+##' @param verbose logical; switch on/off printing of info messages.
+##' @param .parallel logical; whether to parallelize the correlation
+##'   computations of the individual sampling possibilities. Defaults to
+##'   \code{FALSE}.
+##' @param mc.cores integer; the number of cores to use for a parallel
+##'   computation, i.e. at most how many child processes will be run
+##'   simultaneously. The default \code{NULL} means to use the value from
+##'   \code{parallel::detectCores()}.
 ##' @return a list of three elements:
 ##'   * "N": integer; the number of picked cores.
 ##'   * "sample": a list of \code{nmc} data frames (if \code{return.all = TRUE})
@@ -44,7 +52,8 @@
 doPicking <- function(N = 1, target, field, picking.sites,
                       nmc = 1000, replace = FALSE,
                       COSTFUN = cor, ..., maximize = TRUE,
-                      return.all = TRUE) {
+                      return.all = TRUE, verbose = TRUE,
+                      .parallel = FALSE, mc.cores = NULL) {
 
   if (pfields::is.pField(field)) {
 
@@ -71,39 +80,70 @@ doPicking <- function(N = 1, target, field, picking.sites,
     metric = vector()
   )
 
+  samplePicks <- function(picked.sites, target, field, lats, lons, ...) {
+
+    y <- rowMeans(field[, picked.sites, drop = FALSE], na.rm = TRUE)
+
+    list(
+      data.frame(
+        index = picked.sites,
+        lat = lats[picked.sites],
+        lon = lons[picked.sites]
+      ),
+
+      COSTFUN(target, y, ...)
+    )
+
+  }
+
   if (N == 1) {
 
-    for (i in 1 : length(picking.sites)) {
+    if (verbose) cat("Sampling all possibilities.\n")
 
-      i.sample <- picking.sites[i]
-
-      sav$sample[[i]] <- data.frame(
-        index = i.sample,
-        lat = lats[i.sample],
-        lon = lons[i.sample]
-      )
-
-      sav$metric[i] <- COSTFUN(target, field[, i.sample], ...)
-
-    }
+    res <- lapply(picking.sites, samplePicks, target, field, lats, lons, ...)
+    sav$sample <- lapply(res, function(x) {x[[1]]})
+    sav$metric <- sapply(res, function(x) {x[[2]]})
 
   } else {
 
-    for (i in 1 : nmc) {
+    nPossibilities <- choose(length(picking.sites), N)
 
-      i.sample <- sample(picking.sites, size = N, replace = replace)
+    if (nPossibilities > nmc) {
 
-      sav$sample[[i]] <- data.frame(
-        index = i.sample,
-        lat = lats[i.sample],
-        lon = lons[i.sample]
-      )
+      if (verbose) {
+        cat("Too many possibilities; resorting to Monte Carling sampling.\n")
+      }
 
-      y <- rowMeans(field[, i.sample, drop = FALSE], na.rm = TRUE)
+      picking.sites.sampled <- lapply(seq(nmc), function(x) {
+        sample(picking.sites, size = N, replace = replace)})
 
-      sav$metric[i] <- COSTFUN(target, y, ...)
+    } else {
 
+      if (verbose) cat("Sampling all possibilities.\n")
+
+      picking.sites.sampled <- arrangements::combinations(picking.sites, k = N)
+      picking.sites.sampled <- split(picking.sites.sampled,
+                                     row(picking.sites.sampled))
     }
+
+    if (.parallel) {
+
+      require(parallel)
+      if (!length(mc.cores)) mc.cores <- parallel::detectCores()
+
+      res <- parallel::mclapply(picking.sites.sampled, samplePicks,
+                                target, field, lats, lons, ...,
+                                mc.cores = 3)
+
+    } else {
+
+      res <- lapply(picking.sites.sampled, samplePicks,
+                    target, field, lats, lons, ...)
+    }
+
+    sav$sample <- lapply(res, function(x) {x[[1]]})
+    sav$metric <- sapply(res, function(x) {x[[2]]})
+
   }
 
   decreasing <- ifelse(maximize, TRUE, FALSE)
@@ -159,6 +199,13 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##'   for each N) be returned (\code{TRUE}, the default) or only the optimal one
 ##'   (according to the setting of \code{maximize})?
 ##' @param verbose logical; switch on/off printing of progress message.
+##' @param .parallel logical; whether to parallelize the correlation
+##'   computations of the individual sampling possibilities. Defaults to
+##'   \code{FALSE}.
+##' @param mc.cores integer; the number of cores to use for a parallel
+##'   computation, i.e. at most how many child processes will be run
+##'   simultaneously. The default \code{NULL} means to use the value from
+##'   \code{parallel::detectCores()}.
 ##' @return a list of three elements:
 ##'   * "correlation.map": a \code{"pField"} or \code{"pTs"} object with the
 ##'     correlation between every grid cell in \code{field} and the
@@ -172,7 +219,8 @@ pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
                        radius = 2000, target.field, study.field,
                        nmc = 1000, replace = FALSE,
                        COSTFUN = cor, ..., maximize = TRUE,
-                       return.all = TRUE, verbose = TRUE) {
+                       return.all = TRUE, verbose = TRUE,
+                       .parallel = FALSE, mc.cores = NULL) {
 
   target.site <- setTarget(target.field, site = target,
                            lat0 = lat0, lon0 = lon0)
@@ -195,13 +243,15 @@ pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
 
   for (i in 1 : length(N)) {
 
-    if (verbose) print(sprintf("Number of cores: %i", N[i]))
+    if (verbose) cat(sprintf("Number of cores: %i\n", N[i]))
     res$picking[[i]] <- doPicking(N = N[i], target = target.site$dat,
                                   field = study.field,
                                   picking.sites = picking.sites,
                                   nmc = nmc, replace = replace,
                                   COSTFUN = COSTFUN, ...,
-                                  maximize = maximize, return.all = return.all)
+                                  maximize = maximize, return.all = return.all,
+                                  verbose = verbose, .parallel = .parallel,
+                                  mc.cores = mc.cores)
 
   }
 
