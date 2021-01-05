@@ -62,7 +62,7 @@ p <- p +
           legend.title = element_text(size = 18),
           text = element_text(size = 15))
 
-p1 <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+p1 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         n.lat.labels = 3,
                         longitude.spacing = 45,
                         land.fill.colour = "transparent",
@@ -88,7 +88,7 @@ p <- p +
           legend.title = element_text(size = 18),
           text = element_text(size = 15))
 
-p2 <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+p2 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         n.lat.labels = 3,
                         longitude.spacing = 45,
                         land.fill.colour = "transparent",

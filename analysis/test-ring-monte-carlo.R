@@ -44,7 +44,7 @@ for (i in 1 : length(nmc)) {
 }
 
 mismatch <- sapply(doubles.mc, function(x, exact) {
-  ecustools::rmsd(x$correlation$mean, exact$correlation$mean)},
+  stattools::rmsd(x$correlation$mean, exact$correlation$mean)},
   exact = doubles.exact)
 
 # ------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ focus  <- data.frame(lat = lat0, lon = lon0)
 df.lst <- list()
 for (i in 1 : length(radii)) {
 
-  tmp <- ecustools::CircleCoordinates(lat0, lon0, radii[i])
+  tmp <- geostools::CircleCoordinates(lat0, lon0, radii[i])
   tmp$id <- i
   df.lst[[i]] <- tmp
   
@@ -63,7 +63,7 @@ p <- p +
   geom_point(data = focus, aes(x = lon, y = lat),
              col = "black", size = 2.5, pch = 3, stroke = 1)
 
-p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+p <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         n.lat.labels = 3,
                         longitude.spacing = 45,
                         land.fill.colour = "transparent",

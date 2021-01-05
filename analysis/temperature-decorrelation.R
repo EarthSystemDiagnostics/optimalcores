@@ -47,7 +47,7 @@ p <- p +
           legend.title = element_text(size = 18),
           text = element_text(size = 15))
 
-p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+p <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         n.lat.labels = 3,
                         longitude.spacing = 45,
                         land.fill.colour = "transparent",

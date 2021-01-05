@@ -164,13 +164,13 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
     # is pField
     res$dist <-
       pfields::GetDistanceField(field,
-                                  lat = lat0, lon = lon0,
-                                  get.nearest = TRUE)
+                                lat = lat0, lon = lon0,
+                                get.nearest = TRUE)
     
   } else {
     # is pTs
     res$dist <-
-      ecustools::GetDistance(lat0 = lat0, lon0 = lon0,
+      geostools::GetDistance(lat0 = lat0, lon0 = lon0,
                              lat = pfields::GetLat(field[, i.sel]),
                              lon = pfields::GetLon(field[, i.sel]),
                              get.nearest = TRUE)
@@ -232,8 +232,8 @@ setTargetRegion <- function(field,
 
     mid.lat <- (min.lat + max.lat) / 2
     mid.lon <- (min.lon + max.lon) / 2
-    x <- ecustools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
-    y <- ecustools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
+    x <- geostools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
+    y <- geostools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
 
     midpoint.border.distances <- c(x = x, y = y)
     cat(sprintf("Midpoint-border distances:\nx = %4.0f, y = %4.0f.\n",

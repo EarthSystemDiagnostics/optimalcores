@@ -162,7 +162,7 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
           legend.title = element_text(size = 18),
           text = element_text(size = 18))
 
-  p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+  p <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                           n.lat.labels = 3,
                           min.lon = min.lon, max.lon = max.lon, rotate = TRUE,
                           longitude.spacing = 30,
@@ -239,7 +239,7 @@ plotCorrelationContours <- function(correlation, distances, color.palette,
 
 ##' Plot ring bin sampling occurrence
 ##'
-##' Produce a plot of the number of cores each ring around a a target site has
+##' Produce a plot of the number of cores each ring around a target site has
 ##' been sampled in the optimal cases.
 ##'
 ##' @param data the output of \code{processCores} called with data from
@@ -292,7 +292,7 @@ plotRingOccurrences <- function(data,
   for (i in 1 : nrank) {
     ni <- length(ring.occurrences[i, ])
 
-    ecustools::Polyplot(x = xlim, y1 = rep(i - 0.5, 2), y2 = rep(i + 0.5, 2),
+    grfxtools::Polyplot(x = xlim, y1 = rep(i - 0.5, 2), y2 = rep(i + 0.5, 2),
                         col = shading[i], alpha = alpha)
     points(ring.occurrences[i, ], rep(i, ni), pch = pch, cex = cex)
   }
