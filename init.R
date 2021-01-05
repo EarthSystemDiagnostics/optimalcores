@@ -16,7 +16,7 @@ for (pkg in required.packages) {
 
   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
     stop(sprintf("Package \"%s\" needed for \"optimalcores\". ", pkg),
-         "Please install it.", call. = FALSE)
+         "Please install it using \"dependencies.R\".", call. = FALSE)
   }
 }
 
