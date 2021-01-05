@@ -142,8 +142,8 @@ mtext("Correlation", side = 2, line = 4.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = -1.5, cex = par()$cex.lab,
       adj = 0.02, padj = -0.35)
 
-ecustools::Polyplot(N, y1 = edml$local, y2 = edml$optim, col = col1)
-ecustools::Polyplot(N, y1 = vost$local, y2 = vost$optim, col = col2)
+grfxtools::Polyplot(N, y1 = edml$local, y2 = edml$optim, col = col1)
+grfxtools::Polyplot(N, y1 = vost$local, y2 = vost$optim, col = col2)
 
 lines(N, edml$local, col = col1, lty = 2, lwd = 1.5)
 lines(N, edml$optim, col = col1, lty = 1, lwd = 2.5)
