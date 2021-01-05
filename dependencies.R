@@ -12,6 +12,8 @@ install.packages("magrittr")
 install.packages("RColorBrewer")
 
 # install.packages("remotes")
-remotes::install_github("EarthSystemDiagnostics/ecustools")
+remotes::install_github("EarthSystemDiagnostics/geostools")
+remotes::install_github("EarthSystemDiagnostics/grfxtools")
 remotes::install_github("EarthSystemDiagnostics/pfields")
+remotes::install_github("EarthSystemDiagnostics/stattools")
 
