@@ -21,6 +21,9 @@ vos.region <- setTargetRegion(field = model$lnd.t2m,
 
 target.field <- model$t2m
 
+# plot correlation scatter?
+PLTSCATTER <- TRUE
+
 # ------------------------------------------------------------------------------
 # Example of sampling 1 : 3 cores for a single target site
 
@@ -93,7 +96,8 @@ tau2 <- -1 / coefficients(m2)
 
 label <- c(expression(italic("T")["2m"]),
            expression(delta^{18} * "O"),
-           expression(delta^{18} * "O"^{"(pw)"}))
+           expression(delta^{18} * "O"^{"(pw)"}),
+           "exp. fit")
 
 col1 <- "black"
 col2 <- "green4"
@@ -116,6 +120,22 @@ mtext("Distance from target site (km)", side = 1, line = 3.5,
 mtext("Correlation", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
 mtext(label1, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
 
+if (PLTSCATTER) {
+
+  grfxtools::Polyplot(dml$t2m$distances$mean,
+                      dml$t2m$correlation$mean - dml$t2m$correlation$sd,
+                      dml$t2m$correlation$mean + dml$t2m$correlation$sd,
+                      col = col1)
+  grfxtools::Polyplot(dml$t2m$distances$mean,
+                      dml$oxy$correlation$mean - dml$oxy$correlation$sd,
+                      dml$oxy$correlation$mean + dml$oxy$correlation$sd,
+                      col = col2)
+  grfxtools::Polyplot(dml$oxy.pw$distances$mean,
+                      dml$oxy.pw$correlation$mean - dml$oxy.pw$correlation$sd,
+                      dml$oxy.pw$correlation$mean + dml$oxy.pw$correlation$sd,
+                      col = col3)
+}
+
 lines(x, exp(-x/tau1), lty = 2, lwd = 1.5)
 
 lines(dml$t2m$distances$mean, dml$t2m$correlation$mean,
@@ -132,6 +152,22 @@ mtext("Distance from target site (km)", side = 1, line = 3.5,
       cex = par()$cex.lab)
 mtext(label2, side = 3, line = 1.1, cex = par()$cex.lab, adj = 0.02, padj = 1)
 
+if (PLTSCATTER) {
+
+  grfxtools::Polyplot(vos$t2m$distances$mean,
+                      vos$t2m$correlation$mean - vos$t2m$correlation$sd,
+                      vos$t2m$correlation$mean + vos$t2m$correlation$sd,
+                      col = col1)
+  grfxtools::Polyplot(vos$t2m$distances$mean,
+                      vos$oxy$correlation$mean - vos$oxy$correlation$sd,
+                      vos$oxy$correlation$mean + vos$oxy$correlation$sd,
+                      col = col2)
+  grfxtools::Polyplot(vos$oxy.pw$distances$mean,
+                      vos$oxy.pw$correlation$mean - vos$oxy.pw$correlation$sd,
+                      vos$oxy.pw$correlation$mean + vos$oxy.pw$correlation$sd,
+                      col = col3)
+}
+
 lines(x, exp(-x/tau2), lty = 2, lwd = 1.5)
 
 lines(vos$t2m$distances$mean, vos$t2m$correlation$mean,
@@ -141,8 +177,8 @@ lines(vos$oxy$distances$mean, vos$oxy$correlation$mean,
 lines(vos$oxy.pw$distances$mean, vos$oxy.pw$correlation$mean,
       col = col3, type = "b", lwd = 2.5)
 
-legend("topright", label, col = c(col1, col2, col3),
-       lty = 1, lwd = 2.5, bty = "n")
+legend("topright", label, col = c(col1, col2, col3, col1),
+       lty = c(rep(1, 3), 2), lwd = c(rep(2.5, 3), 1.5), bty = "n")
 
 dev.off()
 par(op)
