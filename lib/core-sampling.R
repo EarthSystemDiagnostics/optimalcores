@@ -655,12 +655,21 @@ getOptimalCorrelations <- function(data, n.optim = NULL,
 ##' bins for several target sites in a region.
 ##'
 ##' @param data a list with the results from running \code{analyseTargetRegion}.
-##' @return a list of two elements:
-##'   * "bins": numeric vector with the midpoint distances of the possible ring
-##'     bins from which grid cells could be sampled.
-##'   * "samples": a data frame with, for each ring bin combination, the
-##'     midpoint distances of the sampled ring bins and the average correlation
-##'     across all analysed target sites.
+##' @return a list of five elements:
+##'   * "input": a 2-element list with the midpoint distances of the ring bins
+##'     which were sampled and with the sampled ring bin combinations for each
+##'     "N".
+##'   * "N": the number of grid cells ("ice cores") averaged; identical to the
+##'     number of combined rings for each possibility.
+##'   * "ring.distances.sampled": data frame with the midpoint distances of the
+##'     sampled and combined ring bins for each N (ice core). The number of
+##'     distances (rows) for each N corresponds to the maximum number of
+##'     possible ring bin combinations.
+##'   * "distances": data frame with the mean and SD across the columns of
+##'     "ring.distances.sampled".
+##'   * "correlation": data frame with the mean and SD of the expected
+##'     correlation for each ring bin combination from averaging across all
+##'     target sites in the target region.
 ##' @author Thomas Münch
 processRegionalMean <- function(data) {
 
