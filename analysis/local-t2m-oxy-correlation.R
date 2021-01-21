@@ -20,6 +20,9 @@ correlation.field.pw <- pfields::ApplyFields(model$t2m.pw, model$oxy.pw,
 correlation.field.df <- pField2df(correlation.field)
 correlation.field.pw.df <- pField2df(correlation.field.pw)
 
+difference <- correlation.field.pw.df
+difference$dat <- correlation.field.pw.df$dat - correlation.field.df$dat
+
 # ------------------------------------------------------------------------------
 # Some numbers
 
@@ -63,12 +66,12 @@ p <- p +
           text = element_text(size = 15))
 
 p1 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
-                        n.lat.labels = 3,
-                        longitude.spacing = 45,
-                        land.fill.colour = "transparent",
-                        size.outer = 0.5,
-                        lat.ax.labs.pos = 180, ax.labs.size = 4.5,
-                        data.layer = p)
+                         n.lat.labels = 3,
+                         longitude.spacing = 45,
+                         land.fill.colour = "transparent",
+                         size.outer = 0.5,
+                         lat.ax.labs.pos = 180, ax.labs.size = 4.5,
+                         data.layer = p)
 
 # for t2m(pw)
 correlation.field.pw.df$dat[which(correlation.field.pw.df$dat < 0)] <- 0
@@ -89,12 +92,37 @@ p <- p +
           text = element_text(size = 15))
 
 p2 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
-                        n.lat.labels = 3,
-                        longitude.spacing = 45,
-                        land.fill.colour = "transparent",
-                        size.outer = 0.5,
-                        lat.ax.labs.pos = 180, ax.labs.size = 4.5,
-                        data.layer = p)
+                         n.lat.labels = 3,
+                         longitude.spacing = 45,
+                         land.fill.colour = "transparent",
+                         size.outer = 0.5,
+                         lat.ax.labs.pos = 180, ax.labs.size = 4.5,
+                         data.layer = p)
+
+# for the difference
+p <- ggplot()
+
+p <- p +
+
+    geom_tile(aes(x = lon, y = lat, fill = dat, colour = dat),
+                 data = difference, colour = "transparent") +
+
+    scale_fill_gradientn(colours = col.scale,
+                         na.value = "transparent",
+                         limits = c(-0.2, 0.41), name = "Difference") +
+
+    theme(legend.key.height = unit(0.75, units = "inches"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 18),
+          text = element_text(size = 15))
+
+p3 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+                         n.lat.labels = 3,
+                         longitude.spacing = 45,
+                         land.fill.colour = "transparent",
+                         size.outer = 0.5,
+                         lat.ax.labs.pos = 180, ax.labs.size = 4.5,
+                         data.layer = p)
 
 Quartz(height = 6, width = 12)
 egg::ggarrange(plots = list(p1, p2), nrow = 1, ncol = 2)
