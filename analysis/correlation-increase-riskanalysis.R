@@ -172,5 +172,8 @@ lines(x = rep(edml$local[1], 2), y = c(0, 25000), lwd = 2.5, col = col1)
 hist(dist2, add = TRUE, col = adjustcolor(col2, alpha = 0.2))
 lines(x = rep(vost$local[1], 2), y = c(0, 25000), lwd = 2.5, col = col2)
 
+legend("topright", c("EDML site", "Vostok site"), col = c(col1, col2),
+       lty = 1, lwd = 2.5, bty = "n")
+
 par(op)
 dev.off()
