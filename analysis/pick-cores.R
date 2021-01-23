@@ -91,7 +91,7 @@ if (SAVE) {
 # ------------------------------------------------------------------------------
 # Plot EDML and Vostok results (run above code or load "./analysis/picking.rds")
 
-colour.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+colour.scale <- RColorBrewer::brewer.pal(9, "OrRd")
 
 ggplt <- list()
 data <- edml.picks

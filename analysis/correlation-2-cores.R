@@ -116,7 +116,7 @@ cat("done.\n")
 # ------------------------------------------------------------------------------
 # Plotting
 
-color.palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
+color.palette <- colorRampPalette(RColorBrewer::brewer.pal(9, "OrRd"))
 distances <- attr(t2m, "scale")
 label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
            expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),

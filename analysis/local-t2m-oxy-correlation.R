@@ -46,7 +46,7 @@ pfields::SelPoint(correlation.field, lat = -78.47, lon = 106.83)
 # Plotting
 
 # set colour scale
-col.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+col.scale <- RColorBrewer::brewer.pal(9, "OrRd")
 
 # for t2m
 p <- ggplot()

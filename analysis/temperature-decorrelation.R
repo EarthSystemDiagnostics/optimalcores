@@ -20,7 +20,7 @@ t2m.decorrelation.df <- pfields::pField2df(t2m.decorrelation)
 # Plotting
 
 # set colour scale
-col.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+col.scale <- RColorBrewer::brewer.pal(9, "OrRd")
 
 # set upper/lower quantiles to constant value for plotting purposes
 quantile(t2m.decorrelation.df$dat, na.rm = TRUE, probs = c(0.05, 0.95))
