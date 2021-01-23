@@ -119,7 +119,7 @@ for (i in 1 : length(N)) {
 }
 
 
-Quartz(height = 9, width = 22)
+Quartz(height = 10, width = 24)
 egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3)
 
 dev.copy2pdf(file = file.path(SAVEPATH, "main", "echam5_mpiom_wiso_picking.pdf"))
