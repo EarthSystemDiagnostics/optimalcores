@@ -206,12 +206,14 @@ doPicking <- function(N = 1, target, field, picking.sites,
 ##'   computation, i.e. at most how many child processes will be run
 ##'   simultaneously. The default \code{NULL} means to use the value from
 ##'   \code{parallel::detectCores()}.
-##' @return a list of three elements:
+##' @return a list of four elements:
 ##'   * "correlation.map": a \code{"pField"} or \code{"pTs"} object with the
 ##'     correlation between every grid cell in \code{field} and the
 ##'     \code{target} time series.
 ##'   * "target": a data frame with the name, latitude and longitude of the
 ##'     target site grid cell.
+##'   * "radius": the radius (in km) of the circle around the target
+##'     site from which the cores were picked.
 ##'   * "picking": a list the same length as \code{N}; each list element is the
 ##'     output of \code{\link{doPicking}}.
 ##' @author Thomas Münch
@@ -238,6 +240,7 @@ pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
   res <- list(
     correlation.map = correlation.map,
     target          = target.coord,
+    radius          = radius,
     picking         = list()
   )
 

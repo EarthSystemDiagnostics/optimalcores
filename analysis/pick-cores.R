@@ -101,7 +101,8 @@ for (i in 1 : length(N)) {
   if (i == length(N)) guide = TRUE
 
   ggplt[[i]] <- plotPicking(data, N[i], min.lon = -60, max.lon = 90,
-                            colour.scale = colour.scale, guide = guide)
+                            colour.scale = colour.scale, guide = guide,
+                            plotPickingCircle = TRUE)
 }
 
 j <- length(N)
@@ -113,7 +114,8 @@ for (i in 1 : length(N)) {
 
   ggplt[[i + j]] <- plotPicking(data, N[i], min.lon = 30, max.lon = 180,
                                 colour.scale = colour.scale,
-                                name = "", guide = guide)
+                                name = "", guide = guide,
+                                plotPickingCircle = TRUE)
 }
 
 

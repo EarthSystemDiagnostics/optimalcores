@@ -106,11 +106,34 @@ LoadGraphicsPar <- function(mar = c(5, 5, 0.5, 0.5), lwd = 1, las = 1,
 ##' @param colour.scale vector of colours to use for the correlation map.
 ##' @param name name for the colour bar legend; defaults to "Correlation".
 ##' @param guide logical; should the colour bar legend be plotted?
+##' @param plotCircle logical; should the circle be plotted from within which
+##'   the sites could be picked?
 ##' @return a ggplot2 object.
 ##' @author Thomas Münch
 plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
                         min.lon, max.lon, colour.scale,
-                        name = "Correlation", guide = TRUE) {
+                        name = "Correlation", guide = TRUE,
+                        plotPickingCircle = FALSE) {
+
+  getPickingCircle <- function(target.lat, target.lon, pick.radius,
+                               min.lon, max.lon, max.lat = -60) {
+
+    circle <- geostools::CircleCoordinates(lat0 = target.lat, lon0 = target.lon,
+                                           radius.circle = pick.radius,
+                                           return.pi.interval = TRUE)
+
+    circle$id <- 1
+
+    circle <- circle[which(circle$lon >= min.lon & circle$lon <= max.lon), ]
+
+    if (any(i <- which(circle$lat > max.lat))) {
+
+      circle[which(circle$lon >= mean(circle$lon[i])), "id"] <- 2
+      circle <- circle[-i, ]
+    }
+
+    return(circle)
+  }
 
   Ncores <- sapply(data$picking, function(x) {x$N})
   i <- which(Ncores == N)
@@ -136,6 +159,16 @@ plotPicking <- function(data, N, cor.min = 0, cor.max = 0.5,
 
     geom_point(data = picking$sample, aes(x = lon, y = lat),
                col = "black", size = 4, pch = 19)
+
+  if (plotPickingCircle) {
+
+    circle <- getPickingCircle(data$target$lat, data$target$lon, data$radius,
+                               min.lon, max.lon)
+
+    p <- p +
+      geom_line(data = circle, aes(x = lon, y = lat, group = id),
+                col = "black", size = 0.75)
+  }
 
   if (guide) {
 
