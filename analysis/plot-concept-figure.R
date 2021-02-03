@@ -139,20 +139,20 @@ p2 <- p2 +
   geom_path(aes(x = x, y = y), r3, col = "red") +
   geom_path(aes(x = x, y = y), r4, col = "red") +
 
-  geom_point(aes(x = x, y = y), c11, col = "dodgerblue",
-             pch = 1, size = 2.5, stroke = 1) +
+  geom_point(aes(x = x, y = y), c11, col = "black",
+             pch = 1, size = 3, stroke = 1.5) +
   geom_point(aes(x = x, y = y), c12, col = "black",
-             pch = 1, size = 2.5, stroke = 1) +
+             pch = 19, size = 3, stroke = 1) +
 
   geom_point(aes(x = x, y = y), c21, col = "dodgerblue",
-             pch = 2, size = 3, stroke = 1) +
-  geom_point(aes(x = x, y = y), c22, col = "black",
-             pch = 2, size = 3, stroke = 1) +
+             pch = 1, size = 3, stroke = 1.5) +
+  geom_point(aes(x = x, y = y), c22, col = "dodgerblue",
+             pch = 19, size = 3, stroke = 1) +
 
-  geom_point(aes(x = x, y = y), c31, col = "dodgerblue",
-             pch = 8, size = 2.5, stroke = 1) +
-  geom_point(aes(x = x, y = y), c32, col = "black",
-             pch = 8, size = 2.5, stroke = 1)
+  geom_point(aes(x = x, y = y), c31, col = "#d95f02",
+             pch = 1, size = 3, stroke = 1.5) +
+  geom_point(aes(x = x, y = y), c32, col = "#d95f02",
+             pch = 19, size = 3, stroke = 1)
 
 # ------------------------------------------------------------------------------
 # Plot entire figure
