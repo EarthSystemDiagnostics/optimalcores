@@ -62,19 +62,23 @@ nmc <- 1e5
 edml.picks <- pickNCores(N = N, target = "edml",
                          target.field = model$t2m,
                          study.field = model$lnd.oxy.pw,
-                         nmc = nmc, return.all = FALSE)
+                         nmc = nmc, return.all = FALSE,
+                         use = "pairwise")
 vostok.picks <- pickNCores(N = N, target = "vostok",
                            target.field = model$t2m,
                            study.field = model$lnd.oxy.pw,
-                           nmc = nmc, return.all = FALSE)
+                           nmc = nmc, return.all = FALSE,
+                           use = "pairwise")
 domef.picks  <- pickNCores(N = N, target = "domef",
                            target.field = model$t2m,
                            study.field = model$lnd.oxy.pw,
-                           nmc = nmc, return.all = FALSE)
+                           nmc = nmc, return.all = FALSE,
+                           use = "pairwise")
 wdc.picks    <- pickNCores(N = N, target = "wdc",
                            target.field = model$t2m,
                            study.field = model$lnd.oxy.pw,
-                           nmc = nmc, return.all = FALSE)
+                           nmc = nmc, return.all = FALSE,
+                           use = "pairwise")
 
 if (SAVE) {
 

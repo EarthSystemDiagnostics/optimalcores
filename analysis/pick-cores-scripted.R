@@ -43,7 +43,8 @@ edml.picks <- pickNCores(N = N, target = "edml",
                          target.field = model$t2m,
                          study.field = model$lnd.oxy.pw,
                          nmc = nmc, return.all = FALSE,
-                         .parallel = .parallel, mc.cores = mc.cores)
+                         .parallel = .parallel, mc.cores = mc.cores,
+                         use = "pairwise")
 
 cat("Running Vostok...\n")
 
@@ -51,7 +52,8 @@ vostok.picks <- pickNCores(N = N, target = "vostok",
                            target.field = model$t2m,
                            study.field = model$lnd.oxy.pw,
                            nmc = nmc, return.all = FALSE,
-                           .parallel = .parallel, mc.cores = mc.cores)
+                           .parallel = .parallel, mc.cores = mc.cores,
+                           use = "pairwise")
 
 if (SAVE) {
 

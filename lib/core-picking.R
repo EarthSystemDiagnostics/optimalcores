@@ -227,7 +227,8 @@ pickNCores <- function(N = 1, target = "edml", lat0 = NULL, lon0 = NULL,
   target.site <- setTarget(target.field, site = target,
                            lat0 = lat0, lon0 = lon0)
 
-  correlation.map <- pfields::cor.pTs(target.site$dat, study.field)
+  correlation.map <- pfields::cor.pTs(target.site$dat, study.field,
+                                      use = "pairwise")
 
   target.coord <- data.frame(
     name = if (is.null(target)) "site i" else target,
