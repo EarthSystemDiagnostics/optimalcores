@@ -128,7 +128,7 @@ col2 = "dodgerblue4"
 label1 <- expression(bold("a"))
 label2 <- expression(bold("b"))
 
-Quartz(file.path(SAVEPATH, "main", "fig_08.pdf"),
+Quartz(file.path(SAVEPATH, "main", "fig_07.pdf"),
        height = 5, width = 12)
 op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(5, 6, 2.5, 1), xaxs = "i", yaxs = "i"))

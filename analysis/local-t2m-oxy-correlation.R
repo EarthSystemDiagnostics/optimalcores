@@ -43,7 +43,7 @@ pfields::SelPoint(correlation.field, lat = -75, lon = 0)
 pfields::SelPoint(correlation.field, lat = -78.47, lon = 106.83)
 
 # ------------------------------------------------------------------------------
-# Plotting
+# Prepare plotting
 
 # set colour scale
 col.scale <- RColorBrewer::brewer.pal(9, "OrRd")
@@ -58,7 +58,7 @@ p <- p +
 
     scale_fill_gradientn(colours = col.scale,
                          na.value = "transparent",
-                         limits = c(0, 0.8001), name = "Correlation", guide = FALSE) +
+                         limits = c(0, 0.8001), name = "Correlation") +
 
     theme(legend.key.height = unit(0.75, units = "inches"),
           legend.text = element_text(size = 15),
@@ -100,6 +100,8 @@ p2 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                          data.layer = p)
 
 # for the difference
+col.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+
 p <- ggplot()
 
 p <- p +
@@ -124,7 +126,16 @@ p3 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                          lat.ax.labs.pos = 180, ax.labs.size = 4.5,
                          data.layer = p)
 
-Quartz(height = 6, width = 12)
-egg::ggarrange(plots = list(p1, p2), nrow = 1, ncol = 2)
+# ------------------------------------------------------------------------------
+# Combine and save plots
 
-dev.copy2pdf(file = file.path(SAVEPATH, "main", "fig_03.pdf"))
+# OBS!
+# Load prepared plot of the results from 'temperature-decorrelation.R' as 'p0'
+# to include in this figure
+
+Quartz(height = 11, width = 14)
+egg::ggarrange(plots = list(p0, p1, p2, p3), nrow = 2, ncol = 2,
+               labels = c("a", "b", "c", "d"),
+               label.args = list(gp = grid::gpar(font = 2, cex = 1.6)))
+
+dev.copy2pdf(file = file.path(SAVEPATH, "main", "fig_02.pdf"))
