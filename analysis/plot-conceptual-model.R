@@ -33,7 +33,7 @@ c0 <- 0.4
 c1 <- 0.
 d0 <- 6000
 # t2m-oxy correlation parameters Vostok
-c0 <- 0.5
+c0 <- 0.6
 c1 <- 0.
 d0 <- 2500
 
@@ -57,37 +57,39 @@ oxy.pw <- runConceptualModel(r, tau = tau, tau.d = tau.d, tau.pw = tau.pw,
 
 # 1. decorrelation plots
 
-col <- c("black", "black", "#7570b3", "#1b9e77", "#d95f02")
-label <- c(expression(italic("T")["2m"]),
+col <- c("black", "#7570b3", "black", "#1b9e77", "#d95f02")
+label <- c(expression(italic("T")["2m"] * " vs. " * italic("T")["2m"]),
+           "Intermittency noise",
            expression(italic("T")["2m"] * " vs. " * italic("T")["2m"]^{"(pw)"}),
-           "intermittency noise",
-           expression(italic("T")["2m"]^{"(pw)"}),
+           expression(italic("T")["2m"]^{"(pw)"} * " vs. " *
+                      italic("T")["2m"]^{"(pw)"}),
            expression(italic("T")["2m"] * " vs. " *
                       bar(italic("T"))["2m"]^{"(pw)"} * " (N = 2)"))
 
 Quartz(width = 4.5, height = 7,
-       file = file.path(SAVEPATH, "main", "conceptual_model_decorrelation.pdf"))
+       file = file.path(SAVEPATH, "main", "fig_A01.pdf"))
 op <- par(LoadGraphicsPar(mar = c(5, 5, 0.5, 1.25)))
 
 plot(1, type = "n", xaxs = "i", yaxs = "i", xlim = range(r), ylim = c(0, 1),
-     xlab = "Distance (km)", ylab = "Correlation")
+     xlab = "Distance (km)", ylab = "")
+mtext("Correlation", side = 2, line = 3.5, cex = par()$cex.lab, las = 0)
 
 lines(r, exp(-r / tau),
       col = col[1], lty = 1, lwd = 2)
 
-lines(r, sqrt(1 - xi) * exp(-r / tau),
-      col = col[2], lty = 2, lwd = 2)
-
 lines(r, exp(-r / tau.pw),
-      col = col[3], lty = 1, lwd = 2)
+      col = col[2], lty = 1, lwd = 2)
+
+lines(r, sqrt(1 - xi) * exp(-r / tau),
+      col = col[3], lty = 2, lwd = 2)
 
 lines(r, (1 - xi) * exp(-r / tau) + xi * exp(-r / tau.pw),
       col = col[4], lty = 1, lwd = 2)
 
 lines(r, t2m.pw[1, ], col = col[5], lty = 1, lwd = 2.5)
 
-legend("topright", label, col = col, lty = c(1, 2, 1, 1, 1),
-       lwd = c(rep(2, 4), 2.5), bty = "n")
+legend("topright", label, col = col, lty = c(1, 1, 2, 1, 1),
+       lwd = c(rep(2, 4), 2.5), y.intersp = 1.25, bty = "n")
 
 par(op)
 dev.off()
