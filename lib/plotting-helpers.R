@@ -97,7 +97,7 @@ LoadGraphicsPar <- function(mar = c(5, 5, 0.5, 0.5), lwd = 1, las = 1,
 ##' @param N integer; the number of picked cores. Determines which result to
 ##'   plot from \code{data}.
 ##' @param cor.min numeric; lower correlation value to set as threshold for the
-##'   correlation map (for visual puropses, all lower values are set to this
+##'   correlation map (for visual purposes, all lower values are set to this
 ##'   value in the plotted map).
 ##' @param cor.max numeric; upper correlation value to use in the colour scale
 ##'   of the map plot.
@@ -331,5 +331,87 @@ plotRingOccurrences <- function(data,
   }
 
   abline(v = (ring.distances - ring.distances[1])[-1], col = "darkgrey")
+
+}
+
+##' Plot spatial correlation with target site temperature
+##'
+##' Produce a ggplot2 map plot of Antarctica with a certain model variable's
+##' spatial correlation to the temperature at a given target site, incl. the
+##' target site location as well as correlation contour lines.
+##'
+##' @param map a data frame of the three columns \code{"lat"}, \code{"lon"} and
+##'   \code{"dat"} with the spatial correlation field.
+##' @param target a data frame of one row and the two columns \code{"lat"} and
+##'   \code{"lon"} with the coordinates of the target site.
+##' @param cor.min numeric; lower correlation value to set as threshold for the
+##'   correlation map (for visual purposes, all lower values are set to this
+##'   value in the plotted map).
+##' @param cor.max numeric; upper correlation value to use in the colour scale
+##'   of the map plot.
+##' @param binwidth numeric; the bin width for the correlation contour lines.
+##' @param colour.scale vector of colours to use for the correlation map.
+##' @param guide logical; should the colour bar legend be plotted?
+##' @param name name for the colour bar legend; defaults to "Correlation".
+##' @return a ggplot2 object.
+##' @author Thomas Münch
+plotSpatialT2mCorrelation <- function(map, target, cor.min = -0.5, cor.max = 1,
+                                      binwidth = 0.1, colour.scale = NULL,
+                                      guide = TRUE, name = "Correlation") {
+
+  if (is.null(colour.scale)) {
+    colour.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+  }
+
+  # constrain correlation range for visual purposes
+  map$dat[map$dat < cor.min] <- cor.min
+
+  p <- ggplot()
+
+  p <- p +
+
+  geom_tile(aes(x = lon, y = lat, fill = dat),
+            data = map, colour = "transparent") +
+
+  geom_contour(aes(x = lon, y = lat, z = dat),
+               data = map, colour = "black", binwidth = binwidth) +
+
+  geom_point(data = target, aes(x = lon, y = lat),
+             col = "black", size = 4, pch = 3, stroke = 1.5)
+
+  if (guide) {
+
+    p <- p +
+
+      scale_fill_gradientn(colours = colour.scale,
+                           na.value = "transparent",
+                           limits = c(cor.min, cor.max),
+                           name = name)
+  } else {
+
+    p <- p +
+
+      scale_fill_gradientn(colours = colour.scale,
+                           na.value = "transparent",
+                           limits = c(cor.min, cor.max),
+                           name = name, guide = guide)
+  }
+
+  p <- p +
+
+    theme(legend.key.height = unit(0.75, units = "inches"),
+          legend.text = element_text(size = 18),
+          legend.title = element_text(size = 18),
+          text = element_text(size = 18))
+
+  p <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+                          n.lat.labels = 3,
+                          longitude.spacing = 45,
+                          land.fill.colour = "transparent",
+                          size.outer = 0.5,
+                          lat.ax.labs.pos = 180, ax.labs.size = 4.5,
+                          data.layer = p)
+
+  p
 
 }
