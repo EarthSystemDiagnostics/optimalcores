@@ -45,6 +45,37 @@ getRingGrids <- function(dist.start = 0, delta.d = 250, distance.field) {
 
 }
 
+##' Number of grid cells within radial bins
+##'
+##' Determine the number of grid cells that lie within radial distance bins of
+##' specified inner and outer radius given a field of grid cell distances
+##' relative to a target site.
+##'
+##' @param distance.field numeric vector of distances of the grid cells in an
+##'   investigated model grid relative to a target site.
+##' @param start inner radius of the innermost (first) radial distance bin.
+##' @param end inner radius of the outermost (last) radial distance bin.
+##' @param binsize radial width of the requested distance bins.
+##' @return integer vector the same length as \code{start} with the number of
+##'   grid cells that lie within each radial distance bin, starting with the bin
+##'   from \code{start} to \code{start + binsize} to the bin from \code{end} to
+##'   \code{end + binsize}.
+##' @author Thomas Münch
+getNumberOfCells <- function(distance.field, start, end, binsize) {
+
+  inner <- seq(start, end, binsize)
+  outer <- inner + binsize
+
+  cell.number <- integer()
+  for (i in 1 : length(inner)) {
+    cell.number <- c(cell.number,
+      length(which(distance.field >= inner[i] & distance.field < outer[i])))
+  }
+
+  return(cell.number)
+
+}
+
 ##' Produce symmetric data matrix
 ##'
 ##' Produce a symmetric matrix of data sampled from the same bins in two
