@@ -12,9 +12,9 @@ source("init.R")
 # Settings
 
 # Set some target site
-lat0  <- -80
-lon0  <- 45
-radii <- seq(250, 1000, 250)
+lat0  <- -82
+lon0  <- 107.5
+radii <- seq(250, 1250, 250)
 
 # Calculate ring coordinates
 target <- data.frame(lat = lat0, lon = lon0)
@@ -53,9 +53,9 @@ p1 <- p1 +
   geom_point(data = vost, aes(x = lon, y = lat),
              col = "black", bg = "grey", size = 2, pch = 25, stroke = 1) +
   geom_polygon(data = edml.region, aes(x = lon, y = lat),
-               col = "black", fill = "transparent", size = 0.5) +
+               col = "black", fill = "transparent", size = 0.75) +
   geom_polygon(data = vost.region, aes(x = lon, y = lat),
-               col = "black", fill = "transparent", size = 0.5) +
+               col = "black", fill = "transparent", size = 0.75) +
   geom_path(data = rings, aes(x = lon, y = lat, group = id),
             col = "red", size = 0.75) +
   geom_point(data = target, aes(x = lon, y = lat),
@@ -69,8 +69,6 @@ p1 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         plt.lat.axes = FALSE,
                         ax.labs.size = 4.75,
                         data.layer = p1)
-
-print(p1)
 
 # ------------------------------------------------------------------------------
 # Create panel (b): Conceptual sketch of ring sampling approach
@@ -157,7 +155,7 @@ p2 <- p2 +
 # ------------------------------------------------------------------------------
 # Plot entire figure
 
-Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"), height = 6, width = 12)
+Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"), height = 6.25, width = 12)
 
 egg::ggarrange(plots = list(p1, p2), nrow = 1, ncol = 2, labels = c("a", "b"),
                label.args = list(gp = grid::gpar(cex = 1.5, font = 2)))

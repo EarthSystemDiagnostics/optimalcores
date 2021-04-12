@@ -759,6 +759,14 @@ arrangeRingOccurrences <- function(ring.counts, ring.distances, dx = 50) {
     }))
   })
 
-  list2mat(ring.occurrences)
+  if (is.list(ring.occurrences)) {
+    list2mat(ring.occurrences)
+  } else if (is.matrix(ring.occurrences)) {
+    t(ring.occurrences)
+  } else {
+    stop("Something's wrong in 'arrangeRingOccurrences()': ",
+         "variable 'ring.occurrences' is neither list nor matrix.",
+         call. = FALSE)
+  }
 
 }
