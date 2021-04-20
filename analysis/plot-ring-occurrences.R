@@ -23,7 +23,7 @@ dat.N5 <- readRDS("analysis/ring_occurrences_edml_vostok_N=5.rds")
 # Plotting
 
 Quartz(width = 14, height = 6,
-       file = file.path(SAVEPATH, "main", "fig_06.pdf"))
+       file = file.path(SAVEPATH, "main", "fig_07.pdf"))
 op <- par(LoadGraphicsPar(mfcol = c(2, 2),
                           mar = c(0, 0, 0, 0),
                           oma = c(5, 7.5, 2.5, 0.5)))

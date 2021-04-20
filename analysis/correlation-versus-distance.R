@@ -97,7 +97,7 @@ tau2 <- -1 / coefficients(m2)
 label <- c(expression(italic("T")["2m"]),
            expression(delta^{18} * "O"),
            expression(delta^{18} * "O"^{"(pw)"}),
-           "exp. fit")
+           "Exp. fit")
 
 col1 <- "black"
 col2 <- "green4"
@@ -106,7 +106,7 @@ col3 <- "dodgerblue3"
 label1 <- expression("(" * bold("a") * ") DML")
 label2 <- expression("(" * bold("b") * ") Vostok")
 
-Quartz(file.path(SAVEPATH, "main", "fig_04.pdf"),
+Quartz(file.path(SAVEPATH, "main", "fig_05.pdf"),
        height = 5.5, width = 12)
 op <- par(LoadGraphicsPar(mfcol = c(1, 2),
                           mar = c(0, 0, 0, 0),
@@ -180,5 +180,5 @@ lines(vos$oxy.pw$distances$mean, vos$oxy.pw$correlation$mean,
 legend("topright", label, col = c(col1, col2, col3, col1),
        lty = c(rep(1, 3), 2), lwd = c(rep(2.5, 3), 1.5), bty = "n")
 
-dev.off()
 par(op)
+dev.off()

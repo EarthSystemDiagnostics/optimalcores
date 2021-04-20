@@ -122,9 +122,16 @@ for (i in 1 : length(N)) {
                                 plotPickingCircle = TRUE)
 }
 
+labels <- c(expression("(" * bold("a") * ") " * "N = 1"),
+            expression("(" * bold("b") * ") " * "N = 3"),
+            expression("(" * bold("c") * ") " * "N = 5"),
+            expression("(" * bold("d") * ") " * "N = 1"),
+            expression("(" * bold("e") * ") " * "N = 3"),
+            expression("(" * bold("f") * ") " * "N = 5"))
 
-Quartz(height = 10, width = 26)
-egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3)
+Quartz(height = 10.6364, width = 26)
+egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3, labels = labels,
+               label.args = list(gp = grid::gpar(cex = 2)))
 
 dev.copy2pdf(file = file.path(SAVEPATH, "main", "echam5_mpiom_wiso_picking.pdf"))
 

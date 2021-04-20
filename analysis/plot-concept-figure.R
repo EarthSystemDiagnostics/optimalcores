@@ -14,7 +14,7 @@ source("init.R")
 # Set some target site
 lat0  <- -82
 lon0  <- 107.5
-radii <- seq(250, 1250, 250)
+radii <- seq(250, 1000, 250)
 
 # Calculate ring coordinates
 target <- data.frame(lat = lat0, lon = lon0)
