@@ -94,7 +94,7 @@ if (SAVE) {
 # ------------------------------------------------------------------------------
 # Plot EDML and Vostok results (run above code or load "./analysis/picking.rds")
 
-colour.scale <- RColorBrewer::brewer.pal(9, "OrRd")
+col.scale <- grfxtools::ColorPal("OrRd")
 
 ggplt <- list()
 data <- edml.picks
@@ -104,7 +104,7 @@ for (i in 1 : length(N)) {
   if (i == length(N)) guide = TRUE
 
   ggplt[[i]] <- plotPicking(data, N[i], min.lon = -60, max.lon = 105,
-                            colour.scale = colour.scale, guide = guide,
+                            colour.scale = col.scale, guide = guide,
                             plotPickingCircle = TRUE)
 }
 
@@ -116,9 +116,8 @@ for (i in 1 : length(N)) {
  if (i == length(N)) guide = TRUE
 
   ggplt[[i + j]] <- plotPicking(data, N[i], min.lon = 30, max.lon = 180,
-                                colour.scale = colour.scale,
-                                name = "", guide = guide,
-                                plotPickingCircle = TRUE)
+                                colour.scale = col.scale, name = "",
+                                guide = guide, plotPickingCircle = TRUE)
 }
 
 labels <- c(expression("(" * bold("a") * ") " * "N = 1"),

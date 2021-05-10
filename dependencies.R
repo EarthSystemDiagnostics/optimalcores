@@ -9,7 +9,6 @@ install.packages("abind")
 install.packages("arrangements")
 install.packages("egg")
 install.packages("magrittr")
-install.packages("RColorBrewer")
 
 # install.packages("remotes")
 remotes::install_github("EarthSystemDiagnostics/geostools")

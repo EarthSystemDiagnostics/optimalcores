@@ -46,7 +46,7 @@ pfields::SelPoint(correlation.field, lat = -78.47, lon = 106.83)
 # Prepare plotting
 
 # set colour scale
-col.scale <- RColorBrewer::brewer.pal(9, "OrRd")
+col.scale <- grfxtools::ColorPal("OrRd")
 
 # for t2m
 p <- ggplot()
@@ -100,7 +100,7 @@ p2 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                          data.layer = p)
 
 # for the difference
-col.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+col.scale <- grfxtools::ColorPal("RdYlBu", n.in = 10, rev = TRUE)
 
 p <- ggplot()
 

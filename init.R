@@ -10,7 +10,7 @@
 # Load required packages
 
 required.packages <- c("abind", "arrangements", "egg", "geostools", "grfxtools",
-                       "magrittr", "pfields", "RColorBrewer", "stattools")
+                       "magrittr", "pfields", "stattools")
 
 for (pkg in required.packages) {
 

@@ -278,7 +278,7 @@ plotSpatialT2mCorrelation <- function(map, target, cor.min = -0.5, cor.max = 1,
                                       guide = TRUE, name = "Correlation") {
 
   if (is.null(colour.scale)) {
-    colour.scale <- rev(RColorBrewer::brewer.pal(10, "RdYlBu"))
+    colour.scale <- grfxtools::ColorPal("RdYlBu", n.in = 10, rev = TRUE)
   }
 
   # constrain correlation range for visual purposes

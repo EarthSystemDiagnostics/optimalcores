@@ -95,7 +95,7 @@ par(op)
 dev.off()
 
 # 2. correlation maps
-color.palette <- colorRampPalette(RColorBrewer::brewer.pal(9, "OrRd"))
+color.palette <- grfxtools::ColorPal("OrRd", fun = TRUE)
 distances <- r
 label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
            expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),

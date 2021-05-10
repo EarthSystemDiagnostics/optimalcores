@@ -68,7 +68,7 @@ length(which(optimal.distances > 125)) / n
 # as map
 
 ring.dist <- tmp$input$ring.distances
-col.scale <- RColorBrewer::brewer.pal(length(ring.dist), "Reds")
+col.scale <- grfxtools::ColorPal("Reds", n.in = length(ring.dist))
 names(col.scale) <- ring.dist
 
 df <- data.frame(lon = continental.longitudes[sites],
