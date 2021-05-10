@@ -133,10 +133,9 @@ col2 = "dodgerblue4"
 label1 <- expression(bold("a"))
 label2 <- expression(bold("b"))
 
-Quartz(file.path(SAVEPATH, "main", "fig_08.pdf"),
-       height = 5, width = 12)
-op <- par(LoadGraphicsPar(mfcol = c(1, 2),
-                          mar = c(5, 6, 2.5, 1), xaxs = "i", yaxs = "i"))
+op <- grfxtools::Quartz(file.path(SAVEPATH, "main", "fig_08.pdf"),
+                        height = 5, width = 12, mfcol = c(1, 2),
+                        mar = c(5, 6, 2.5, 1), xaxs = "i", yaxs = "i")
 
 plot(N, edml$optim, type = "n", xlab = "", ylab = "", log = "x", axes = FALSE,
      xlim = range(N), ylim = c(0.2, 0.6))

@@ -107,7 +107,7 @@ labels <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
             expression("(" * bold("g") * ") " * delta^{18} * "O"),
             expression("(" * bold("h") * ") " * delta^{18} * "O"^{"(pw)"}))
 
-Quartz(height = 24, width = 14)
+grfxtools::Quartz(height = 24, width = 14)
 egg::ggarrange(plots = ggplt, nrow = 4, ncol = 2, labels = labels,
                label.args = list(gp = grid::gpar(cex = 2)))
 

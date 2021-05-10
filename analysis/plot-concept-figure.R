@@ -155,7 +155,8 @@ p2 <- p2 +
 # ------------------------------------------------------------------------------
 # Plot entire figure
 
-Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"), height = 6.25, width = 12)
+grfxtools::Quartz(file.path(SAVEPATH, "main", "fig_01.pdf"),
+                  height = 6.25, width = 12)
 
 egg::ggarrange(plots = list(p1, p2), nrow = 1, ncol = 2, labels = c("a", "b"),
                label.args = list(gp = grid::gpar(cex = 1.5, font = 2)))

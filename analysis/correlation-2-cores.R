@@ -135,25 +135,29 @@ if (interactive()) {
     zlim.oxy.pw = c(0.15, 0.5)
   }
 
-  Quartz(dpi = 300, file = file.path(
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
                       SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
   plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
                           label = label[1])
   dev.off()
 
-  Quartz(dpi = 300, file = file.path(
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
                       SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
   plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.6),
                           label = label[2])
   dev.off()
 
-  Quartz(dpi = 300, file = file.path(
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
                       SAVEPATH, "main", paste0(filebase, "03_oxy.png")))
   plotCorrelationContours(oxy, distances, color.palette, zlim = zlim.oxy,
                           label = label[3])
   dev.off()
 
-  Quartz(dpi = 300, file = file.path(
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
                       SAVEPATH, "main", paste0(filebase, "04_oxy.pw.png")))
   plotCorrelationContours(oxy.pw, distances, color.palette, zlim = zlim.oxy.pw,
                           label = label[4])

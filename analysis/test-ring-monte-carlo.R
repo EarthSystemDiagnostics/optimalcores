@@ -51,9 +51,9 @@ mismatch <- sapply(doubles.mc, function(x, exact) {
 # ------------------------------------------------------------------------------
 # Plotting
 
-Quartz(file.path(
-  SAVEPATH, "side-results", "monte_carlo_mismatch_ring_sampling_N=2.pdf"))
-op <- par(LoadGraphicsPar(mar = c(5, 6, 0.5, 0.5)))
+op <- grfxtools::Quartz(file.path(
+  SAVEPATH, "side-results", "monte_carlo_mismatch_ring_sampling_N=2.pdf"),
+  mar = c(5, 6, 0.5, 0.5))
           
 plot(nmc, mismatch, type = "b", log = "xy", xlab = "", ylab = "",
      ylim = c(0.0005, 0.02), axes = FALSE)
@@ -98,9 +98,9 @@ for (i in 1 : length(nmc)) {
 # ------------------------------------------------------------------------------
 # Plotting
 
-Quartz(file.path(
-  SAVEPATH, "side-results", "monte_carlo_mismatch_ring_sampling_N=3.pdf"))
-op <- par(LoadGraphicsPar(mar = c(5, 6, 0.5, 0.5)))
+op <- grfxtools::Quartz(file.path(
+  SAVEPATH, "side-results", "monte_carlo_mismatch_ring_sampling_N=3.pdf"),
+  mar = c(5, 6, 0.5, 0.5))
 
 plot(nmc, triples.mc - triples.mc[length(triples.mc)],
      type = "b", log = "x", xlab = "", ylab = "",

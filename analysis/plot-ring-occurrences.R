@@ -22,11 +22,10 @@ dat.N5 <- readRDS("analysis/ring_occurrences_edml_vostok_N=5.rds")
 # ------------------------------------------------------------------------------
 # Plotting
 
-Quartz(width = 14, height = 6,
-       file = file.path(SAVEPATH, "main", "fig_07.pdf"))
-op <- par(LoadGraphicsPar(mfcol = c(2, 2),
-                          mar = c(0, 0, 0, 0),
-                          oma = c(5, 7.5, 2.5, 0.5)))
+op <- grfxtools::Quartz(width = 14, height = 6,
+                        file = file.path(SAVEPATH, "main", "fig_07.pdf"),
+                        mfcol = c(2, 2), mar = c(0, 0, 0, 0),
+                        oma = c(5, 7.5, 2.5, 0.5))
 
 plotRingOccurrences(dat.N3$edml, xlab = "", xaxt = "n", ylab = "")
 abline(h = 0.5, v = 2250, lwd = 5)

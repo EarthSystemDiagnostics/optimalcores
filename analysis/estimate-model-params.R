@@ -105,8 +105,8 @@ label <- c(expression(italic("T")["2m"]^{"(pw)"}),
            "parameter curve",
            expression(italic("T")["2m"] * " with fit"))
 
-Quartz(file.path(SAVEPATH, "side-results", "t2m_decorrelation_fits_dml.pdf"))
-op <- par(LoadGraphicsPar())
+op <- grfxtools::Quartz(file.path(SAVEPATH, "side-results",
+                                  "t2m_decorrelation_fits_dml.pdf"))
 
 plot(dml.t2m$distances$mean, dml.t2m$correlation$mean, type = "n",
      xlab = "", ylab = "",

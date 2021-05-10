@@ -39,9 +39,8 @@ optimal.correlation <- test.nmc %>%
 labels = c(expression(10^1), expression(10^2), expression(10^3),
            expression(10^4), expression(10^5), expression(10^6))
 
-Quartz(file.path(SAVEPATH, "side-results",
-                 "monte_carlo_picking_stability_N=3.pdf"))
-par(LoadGraphicsPar())
+grfxtools::Quartz(file.path(SAVEPATH, "side-results",
+                            "monte_carlo_picking_stability_N=3.pdf"))
 
 plot(nmc, optimal.correlation, type = "b", log = "x", axes = FALSE,
      ylim = c(0.35, 0.5), xlab = "", ylab = "")
@@ -129,7 +128,7 @@ labels <- c(expression("(" * bold("a") * ") " * "N = 1"),
             expression("(" * bold("e") * ") " * "N = 3"),
             expression("(" * bold("f") * ") " * "N = 5"))
 
-Quartz(height = 10.6364, width = 26)
+grfxtools::Quartz(height = 10.6364, width = 26)
 egg::ggarrange(plots = ggplt, nrow = 2, ncol = 3, labels = labels,
                label.args = list(gp = grid::gpar(cex = 2)))
 
@@ -175,10 +174,10 @@ phist.weighted <- phist
 phist.weighted$counts <- (phist.weighted$counts * weights) / sum(weights)
 
 
-Quartz(file.path(SAVEPATH, "side-results",
-                 "optimal_picking_distance_single_core_antarctica.pdf"),
-       height = 6, width = 8.5)
-op <- par(LoadGraphicsPar(mar = c(5, 5, 0.5, 5)))
+op <- grfxtools::Quartz(
+  file.path(SAVEPATH, "side-results",
+            "optimal_picking_distance_single_core_antarctica.pdf"),
+  height = 6, width = 8.5, mar = c(5, 5, 0.5, 5))
 
 plot(phist, main = "", xlab = "Distance from target (km)", ylab = "Counts",
      col = adjustcolor("black", 0.2), border = "dimgrey")

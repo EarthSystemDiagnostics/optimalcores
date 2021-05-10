@@ -133,7 +133,7 @@ p3 <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
 # Load prepared plot of the results from 'temperature-decorrelation.R' as 'p0'
 # to include in this figure
 
-Quartz(height = 11, width = 14)
+grfxtools::Quartz(height = 11, width = 14)
 egg::ggarrange(plots = list(p0, p1, p2, p3), nrow = 2, ncol = 2,
                labels = c("a", "b", "c", "d"),
                label.args = list(gp = grid::gpar(font = 2, cex = 1.6)))

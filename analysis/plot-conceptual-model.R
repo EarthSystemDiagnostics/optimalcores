@@ -66,9 +66,9 @@ label <- c(expression(italic("T")["2m"] * " vs. " * italic("T")["2m"]),
            expression(italic("T")["2m"] * " vs. " *
                       bar(italic("T"))["2m"]^{"(pw)"} * " (N = 2)"))
 
-Quartz(width = 4.5, height = 7,
-       file = file.path(SAVEPATH, "main", "fig_A01.pdf"))
-op <- par(LoadGraphicsPar(mar = c(5, 5, 0.5, 1.25)))
+op <- grfxtools::Quartz(width = 4.5, height = 7,
+                        file = file.path(SAVEPATH, "main", "fig_A01.pdf"),
+                        mar = c(5, 5, 0.5, 1.25))
 
 plot(1, type = "n", xaxs = "i", yaxs = "i", xlim = range(r), ylim = c(0, 1),
      xlab = "Distance (km)", ylab = "")
@@ -104,22 +104,25 @@ label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
 filebase <- "conceptual_model_correlation_dml_"
 filebase <- "conceptual_model_correlation_vostok_"
 
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
+grfxtools::Quartz(dpi = 300,
+                  file = file.path(
+                    SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
 plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
                         xlab.pos = seq(0, 2000, 500), label = label[1],
                         dx = seq(250, 1750, 500))
 dev.off()
 
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
+grfxtools::Quartz(dpi = 300,
+                  file = file.path(
+                    SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
 plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.6),
                         xlab.pos = seq(0, 2000, 500), label = label[2],
                         dx = seq(250, 1750, 500))
 dev.off()
 
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "03_oxy.pw.png")))
+grfxtools::Quartz(dpi = 300,
+                  file = file.path(
+                    SAVEPATH, "main", paste0(filebase, "03_oxy.pw.png")))
 plotCorrelationContours(oxy.pw, distances, color.palette, zlim = c(0.15, 0.25),
                         xlab.pos = seq(0, 2000, 500), label = label[3],
                         dx = seq(250, 1750, 500),
