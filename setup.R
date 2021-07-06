@@ -6,10 +6,10 @@
 ##
 
 # set the directory of your 'optimalcores' copy
-SRCPATH <- "~/research/awi/comb-i/echam-wiso/optimalcores"
+SRCPATH <- "<Your>/<Directory>/<Here>"
 
 setwd(SRCPATH)
 
 # set your directory for saving plots
-SAVEPATH <- "~/paper/cp_echam5-mpiom-wiso/plots"
+SAVEPATH <- "<Your>/<Directory>/<Here>"
 
