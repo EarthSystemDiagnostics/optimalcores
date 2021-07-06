@@ -5,9 +5,11 @@
 ## script to analyse the sampling structure of rings around the target for
 ## averaging N isotope cores, assessed with expectation value across ring
 ## combinations using Monte Carlo sampling of grid cells.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
+##
 ## Terminal usage:
 ## ./correlation-N-Cores.R <N> <noptim>
 ## where <N> is the number of isotope cores to average and <noptim> is the

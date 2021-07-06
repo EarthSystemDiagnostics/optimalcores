@@ -4,9 +4,10 @@
 ## aim:
 ## script to analyse the correlation structure with temperature for averaging
 ## two isotope cores assessed with expectation value across ring combinations.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 # make script to also run on the terminal

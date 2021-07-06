@@ -2,9 +2,10 @@
 ## aim:
 ## script to analyse distance dependence of the correlation with temperature
 ## for different model variables and averaged over rings and target sites.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 source("init.R")

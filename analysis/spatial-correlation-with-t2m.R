@@ -1,10 +1,11 @@
 ##
 ## aim:
 ## script to analyse spatial correlation between t2m and
-## fields of t2m, t2m.pw, d18O and d18O.pw
+## fields of t2m, t2m.pw, d18O and d18O.pw.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 source("init.R")

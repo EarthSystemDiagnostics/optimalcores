@@ -4,9 +4,10 @@
 ## cores from rings in order to obtain similar results as with the exact
 ## solution. In addition, we test the convergence of the optimal correlation
 ## value for N = 3 depending on the number of Monte Carlo iterations.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 source("init.R")

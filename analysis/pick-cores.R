@@ -2,9 +2,10 @@
 ## aim:
 ## script to randomly pick cores (grid cells) from a climate model field to find
 ## the optimal sites to reconstruct a target time series.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 source("init.R")
