@@ -45,6 +45,37 @@ getRingGrids <- function(dist.start = 0, delta.d = 250, distance.field) {
 
 }
 
+##' Number of grid cells within radial bins
+##'
+##' Determine the number of grid cells that lie within radial distance bins of
+##' specified inner and outer radius given a field of grid cell distances
+##' relative to a target site.
+##'
+##' @param distance.field numeric vector of distances of the grid cells in an
+##'   investigated model grid relative to a target site.
+##' @param start inner radius of the innermost (first) radial distance bin.
+##' @param end inner radius of the outermost (last) radial distance bin.
+##' @param binsize radial width of the requested distance bins.
+##' @return integer vector the same length as \code{start} with the number of
+##'   grid cells that lie within each radial distance bin, starting with the bin
+##'   from \code{start} to \code{start + binsize} to the bin from \code{end} to
+##'   \code{end + binsize}.
+##' @author Thomas Münch
+getNumberOfCells <- function(distance.field, start, end, binsize) {
+
+  inner <- seq(start, end, binsize)
+  outer <- inner + binsize
+
+  cell.number <- integer()
+  for (i in 1 : length(inner)) {
+    cell.number <- c(cell.number,
+      length(which(distance.field >= inner[i] & distance.field < outer[i])))
+  }
+
+  return(cell.number)
+
+}
+
 ##' Produce symmetric data matrix
 ##'
 ##' Produce a symmetric matrix of data sampled from the same bins in two
@@ -504,6 +535,107 @@ sampleNFromRings <- function(N = 2, nmc = 100, max.dist = 2000, delta.d = 250,
 
 }
 
+##' Analyse a region
+##'
+##' Analyse all sites of a climate field within a given latitude-longitude
+##' region for the average correlation of the mean of N time series of a climate
+##' variable with the time series of a target climate field at a target
+##' site. The N time series are sampled from consecutive ring bins.
+##'
+##' If N = 1, the time series are sampled from the individual rings. For N > 1,
+##' the time series are sampled from rings iterating through all possibilities
+##' of combining N rings.
+##'
+##' @param region a data frame of coordinate indices and latitude-longitude
+##'   values defining a subset region of the climate field in
+##'   \code{target.field}.
+##' @param target.field a \code{"pField"} object from which the grid cells
+##'   defined in \code{region} are to be selected as target sites.
+##' @param study.field a \code{"pField"} or \code{"pTs"} object with a climate
+##'   field for which the correlations with the target sites are to be
+##'   calculated. Its grid structure must match the structure of the distance
+##'   field obtained from selecting a target site from the \code{target.field}.
+##' @param N integer; the number of grid cells to average before computing the
+##'   correlation to the target.
+##' @param max.dist the inner radius of the outermost ring (in km).
+##' @param delta.d the ring width (in km).
+##' @param nmc number of Monte Carlo iterations when sampling more than two
+##' sites, i.e. for \code{N} > 2.
+##' @param ngroups [only for N > 2]: specify an integer number of groups into
+##'   which the ring bin combinations are subdivided, which forces the ring
+##'   sampling to be executed successively in a loop over these groups. This
+##'   setup can be necessary in order to limit RAM demand needed for running a
+##'   large number of cores (\code{N} > 5) in combination with a large number of
+##'   Monte Carlo iterations. Defaults to \code{NULL} which uses no grouping.
+##' @param default.ring.combination [only for N > 2]: an optional matrix with
+##'   \code{N} columns where each row specifies a set of \code{N} indices for a
+##'   certain ring bin combination. If this parameter is provided, only grid
+##'   cells from these given ring bin combinations are sampled. Defaults to
+##'   \code{NULL} which samples all available ring bin combinations.
+##' @param .parallel [only for N > 2]: logical; whether to parallelize the
+##'   correlation computations of the individual ring bin combinations. Defaults
+##'   to \code{TRUE}.
+##' @param mc.cores [only for N > 2]: integer; the number of cores to use for
+##'   the parallel computation, i.e. at most how many child processes will be
+##'   run simultaneously. The default \code{NULL} means to use the value from
+##'   \code{parallel::detectCores()}.
+##' @param verbose logical; if \code{TRUE}, print a progess message giving
+##'   the number of the currently analysed target site of the \code{region} and
+##'   its latitude and longitude; defaults to \code{FALSE}.
+##' @return a list of the same length as the number of sites in \code{region};
+##'   each list element contains the output of \code{processCores} being applied
+##'   on the results of the respective regional site.
+##' @author Thomas Münch
+analyseTargetRegion <- function(region, target.field, study.field, N = 1,
+                                max.dist = 2000, delta.d = 250, nmc = 100,
+                                ngroups = NULL, default.ring.combination = NULL,
+                                .parallel = TRUE, mc.cores = NULL,
+                                verbose = FALSE) {
+
+  res <- list()
+  for (i in 1 : nrow(region)) {
+
+    target.site <- setTarget(field = target.field, site = NULL,
+                             lat0 = region$lat[i],
+                             lon0 = region$lon[i])
+
+    if (verbose) {
+      cat(sprintf("Run %i/%i:\n", i, nrow(region)))
+      cat(sprintf("lat = %2.2f\n", target.site$lat0))
+      cat(sprintf("lon = %2.2f\n", target.site$lon0))
+      cat("\n")
+    }
+
+    if (N == 1) {
+      tmp <- sampleOneFromRings(max.dist = max.dist, delta.d = delta.d,
+                                field = study.field,
+                                target = target.site$dat,
+                                distance.field = target.site$dist)
+    } else if (N == 2) {
+      tmp <- sampleTwoFromRings(max.dist = max.dist, delta.d = delta.d,
+                                field = study.field,
+                                target = target.site$dat,
+                                distance.field = target.site$dist)
+    } else {
+      tmp <- sampleNFromRings(max.dist = max.dist, delta.d = delta.d,
+                              N = N, nmc = nmc,
+                              field = study.field,
+                              target = target.site$dat,
+                              distance.field = target.site$dist,
+                              ngroups = ngroups, .parallel = .parallel,
+                              mc.cores = mc.cores,
+                              default.ring.combination =
+                                default.ring.combination)
+    }
+
+    res[[i]] <- processCores(tmp)
+
+  }
+
+  return(res)
+
+}
+
 # ------------------------------------------------------------------------------
 # PROCESSING FUNCTIONS
 
@@ -655,12 +787,21 @@ getOptimalCorrelations <- function(data, n.optim = NULL,
 ##' bins for several target sites in a region.
 ##'
 ##' @param data a list with the results from running \code{analyseTargetRegion}.
-##' @return a list of two elements:
-##'   * "bins": numeric vector with the midpoint distances of the possible ring
-##'     bins from which grid cells could be sampled.
-##'   * "samples": a data frame with, for each ring bin combination, the
-##'     midpoint distances of the sampled ring bins and the average correlation
-##'     across all analysed target sites.
+##' @return a list of five elements:
+##'   * "input": a 2-element list with the midpoint distances of the ring bins
+##'     which were sampled and with the sampled ring bin combinations for each
+##'     "N".
+##'   * "N": the number of grid cells ("ice cores") averaged; identical to the
+##'     number of combined rings for each possibility.
+##'   * "ring.distances.sampled": data frame with the midpoint distances of the
+##'     sampled and combined ring bins for each N (ice core). The number of
+##'     distances (rows) for each N corresponds to the maximum number of
+##'     possible ring bin combinations.
+##'   * "distances": data frame with the mean and SD across the columns of
+##'     "ring.distances.sampled".
+##'   * "correlation": data frame with the mean and SD of the expected
+##'     correlation for each ring bin combination from averaging across all
+##'     target sites in the target region.
 ##' @author Thomas Münch
 processRegionalMean <- function(data) {
 
@@ -750,6 +891,14 @@ arrangeRingOccurrences <- function(ring.counts, ring.distances, dx = 50) {
     }))
   })
 
-  list2mat(ring.occurrences)
+  if (is.list(ring.occurrences)) {
+    list2mat(ring.occurrences)
+  } else if (is.matrix(ring.occurrences)) {
+    t(ring.occurrences)
+  } else {
+    stop("Something's wrong in 'arrangeRingOccurrences()': ",
+         "variable 'ring.occurrences' is neither list nor matrix.",
+         call. = FALSE)
+  }
 
 }

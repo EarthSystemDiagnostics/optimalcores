@@ -9,14 +9,14 @@
 # ------------------------------------------------------------------------------
 # Load required packages
 
-required.packages <- c("abind", "arrangements", "ecustools", "egg", "magrittr",
-                       "pfields", "RColorBrewer")
+required.packages <- c("abind", "arrangements", "egg", "geostools", "grfxtools",
+                       "magrittr", "pfields", "stattools")
 
 for (pkg in required.packages) {
 
   if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
     stop(sprintf("Package \"%s\" needed for \"optimalcores\". ", pkg),
-         "Please install it.", call. = FALSE)
+         "Please install it using \"dependencies.R\".", call. = FALSE)
   }
 }
 

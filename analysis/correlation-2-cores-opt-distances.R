@@ -52,16 +52,15 @@ for (i in 1 : n) {
 
 # as histogram
 
-Quartz(file.path(
+op <- grfxtools::Quartz(file.path(
   SAVEPATH, "side-results", "ring_sampling_N=2_fix_central_distance_hist.pdf"))
-op <- par(LoadGraphicsPar())
 
 phist <- hist(optimal.distances, breaks = seq(0, 2000, 250),
               main = "", xlab = "Inner ring distance of second core (km)",
               ylab = "Counts", col = "darkgrey", border = "dimgrey")
 
-dev.off()
 par(op)
+dev.off()
 
 # how many cores are placed at least into the second ring?
 length(which(optimal.distances > 125)) / n
@@ -69,7 +68,7 @@ length(which(optimal.distances > 125)) / n
 # as map
 
 ring.dist <- tmp$input$ring.distances
-col.scale <- RColorBrewer::brewer.pal(length(ring.dist), "Reds")
+col.scale <- grfxtools::ColorPal("Reds", n.in = length(ring.dist))
 names(col.scale) <- ring.dist
 
 df <- data.frame(lon = continental.longitudes[sites],
@@ -77,7 +76,7 @@ df <- data.frame(lon = continental.longitudes[sites],
                  dat = factor(as.character(optimal.distances),
                               ordered = TRUE, levels = ring.dist))
 
-Quartz(file.path(
+grfxtools::Quartz(file.path(
   SAVEPATH, "side-results", "ring_sampling_N=2_fix_central_distance_map.pdf"),
   height = 6, width = 6)
 
@@ -97,7 +96,7 @@ p <- p +
           legend.title = element_text(size = 18),
           text = element_text(size = 15))
 
-p <- ecustools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
+p <- grfxtools::ggpolar(pole = "S", max.lat = -60, min.lat = -90,
                         n.lat.labels = 3,
                         longitude.spacing = 45,
                         land.fill.colour = "transparent",

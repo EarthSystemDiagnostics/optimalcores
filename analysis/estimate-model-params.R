@@ -105,8 +105,8 @@ label <- c(expression(italic("T")["2m"]^{"(pw)"}),
            "parameter curve",
            expression(italic("T")["2m"] * " with fit"))
 
-Quartz(file.path(SAVEPATH, "side-results", "t2m_decorrelation_fits_dml.pdf"))
-op <- par(LoadGraphicsPar())
+op <- grfxtools::Quartz(file.path(SAVEPATH, "side-results",
+                                  "t2m_decorrelation_fits_dml.pdf"))
 
 plot(dml.t2m$distances$mean, dml.t2m$correlation$mean, type = "n",
      xlab = "", ylab = "",
@@ -140,5 +140,5 @@ x <- dml.t2m.pw$distances$mean
 independent.fit <- sqrt(1 - xi.dml.t2m.pw) * exp(-x/tau.dml.t2m.pw)
 parameter.fit   <- sqrt(1 - xi.dml) * exp(-x/tau.dml.t2m)
 
-ecustools::rmsd(dml.t2m.pw$correlation$mean, independent.fit)
-ecustools::rmsd(dml.t2m.pw$correlation$mean, parameter.fit)
+stattools::rmsd(dml.t2m.pw$correlation$mean, independent.fit)
+stattools::rmsd(dml.t2m.pw$correlation$mean, parameter.fit)

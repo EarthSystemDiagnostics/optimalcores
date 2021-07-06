@@ -16,34 +16,34 @@ source("init.R")
 adj  <- 0.985
 padj <- 0.5
 
-dat <- readRDS("analysis/ring_occurrences_edml_vostok_N=3_N=5.rds")
+dat.N3 <- readRDS("analysis/ring_occurrences_edml_vostok_N=3.rds")
+dat.N5 <- readRDS("analysis/ring_occurrences_edml_vostok_N=5.rds")
 
 # ------------------------------------------------------------------------------
 # Plotting
 
-Quartz(width = 14, height = 6,
-       file = file.path(SAVEPATH, "main", "fig_07.pdf"))
-op <- par(LoadGraphicsPar(mfcol = c(2, 2),
-                          mar = c(0, 0, 0, 0),
-                          oma = c(5, 7.5, 2.5, 0.5)))
+op <- grfxtools::Quartz(width = 14, height = 6,
+                        file = file.path(SAVEPATH, "main", "fig_07.pdf"),
+                        mfcol = c(2, 2), mar = c(0, 0, 0, 0),
+                        oma = c(5, 7.5, 2.5, 0.5))
 
-plotRingOccurrences(dat$edml$N3, xlab = "", xaxt = "n", ylab = "")
+plotRingOccurrences(dat.N3$edml, xlab = "", xaxt = "n", ylab = "")
 abline(h = 0.5, v = 2250, lwd = 5)
 mtext("a", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$edml$N5,
+plotRingOccurrences(dat.N5$edml,
                     xlab = "Distance from target site (km)", ylab = "")
 abline(v = 2250, lwd = 5)
 mtext("c", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$vost$N3, xlab = "", ylab = "", xaxt = "n", yaxt = "n")
+plotRingOccurrences(dat.N3$vost, xlab = "", ylab = "", xaxt = "n", yaxt = "n")
 abline(h = 0.5, lwd = 5)
 mtext("b", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
 
-plotRingOccurrences(dat$vost$N5,
+plotRingOccurrences(dat.N5$vost,
                     xlab = "Distance from target site (km)", ylab = "", yaxt = "n")
 mtext("d", side = 3, line = -1, las = 0, adj = adj, padj = padj,
       cex = par()$cex.lab, font = 2)
@@ -60,5 +60,5 @@ mtext("EDML", side = 3, line = 0.25, cex = par()$cex.lab,
 mtext("Vostok", side = 3, line = 0.25, cex = par()$cex.lab,
       outer = TRUE, at = 0.54)
 
-dev.off()
 par(op)
+dev.off()
