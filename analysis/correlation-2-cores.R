@@ -4,9 +4,10 @@
 ## aim:
 ## script to analyse the correlation structure with temperature for averaging
 ## two isotope cores assessed with expectation value across ring combinations.
+##
 ## relation:
 ## https://github.com/EarthSystemDiagnostics/optimalcores;
-## Muench, Werner and Laepple (2019), in prep.
+## Münch, Werner and Laepple, Clim. Past, 2021
 ##
 
 # make script to also run on the terminal
@@ -26,7 +27,8 @@ if (interactive()) {
 
   cmd.arg <- commandArgs(trailingOnly = TRUE)
   if (!length(cmd.arg)) {
-    stop("Please specify a command line option for running the simulation.")
+    stop("Please specify 'dml' or 'vostok' as command line option ",
+         "for running the simulation.")
   }
 }
 
@@ -50,8 +52,9 @@ if (cmd.arg == "dml") {
 
 } else {
 
-  stop(sprintf("Unknown command line option '%s' to select analysis region.",
-               cmd.arg))
+  stop(sprintf(
+    paste("Unknown command line option '%s' to select analysis region;",
+          "possible options are 'dml' or 'vostok' only."), cmd.arg))
 }
 
 # ------------------------------------------------------------------------------
@@ -116,44 +119,51 @@ cat("done.\n")
 # ------------------------------------------------------------------------------
 # Plotting
 
-color.palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(10, "RdYlBu")))
-distances <- attr(t2m, "scale")
-label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
-           expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),
-           expression("(" * bold("x") * ") " * delta^{18} * "O"),
-           expression("(" * bold("c") * ") " * delta^{18} * "O"^{"(pw)"}))
+if (interactive()) {
 
-filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_", cmd.arg)
+  color.palette <- grfxtools::ColorPal("OrRd", fun = TRUE)
+  distances <- attr(t2m, "scale")
+  label <- c(expression("(" * bold("a") * ") " * italic("T")["2m"]),
+             expression("(" * bold("b") * ") " * italic("T")["2m"]^{"(pw)"}),
+             expression("(" * bold("x") * ") " * delta^{18} * "O"),
+             expression("(" * bold("c") * ") " * delta^{18} * "O"^{"(pw)"}))
 
-if (cmd.arg == "dml") {
-  zlim.oxy = c(0.2, 0.5)
-  zlim.oxy.pw = c(0.15, 0.35)
-} else {
-  zlim.oxy = c(0.1, 0.55)
-  zlim.oxy.pw = c(0.15, 0.45)
+  filebase <- sprintf("echam5_mpiom_wiso_two_core_correlation_%s_", cmd.arg)
+
+  if (cmd.arg == "dml") {
+    zlim.oxy = c(0.2, 0.5)
+    zlim.oxy.pw = c(0.2, 0.4)
+  } else {
+    zlim.oxy = c(0.1, 0.65)
+    zlim.oxy.pw = c(0.15, 0.5)
+  }
+
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
+                      SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
+  plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
+                          label = label[1])
+  dev.off()
+
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
+                      SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
+  plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.6),
+                          label = label[2])
+  dev.off()
+
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
+                      SAVEPATH, "main", paste0(filebase, "03_oxy.png")))
+  plotCorrelationContours(oxy, distances, color.palette, zlim = zlim.oxy,
+                          label = label[3])
+  dev.off()
+
+  grfxtools::Quartz(dpi = 300,
+                    file = file.path(
+                      SAVEPATH, "main", paste0(filebase, "04_oxy.pw.png")))
+  plotCorrelationContours(oxy.pw, distances, color.palette, zlim = zlim.oxy.pw,
+                          label = label[4])
+  dev.off()
+
 }
-
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "01_t2m.png")))
-plotCorrelationContours(t2m, distances, color.palette, zlim = c(0.2, 1),
-                        label = label[1])
-dev.off()
-
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "02_t2m.pw.png")))
-plotCorrelationContours(t2m.pw, distances, color.palette, zlim = c(0.2, 0.6),
-                        label = label[2])
-dev.off()
-
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "03_oxy.png")))
-plotCorrelationContours(oxy, distances, color.palette, zlim = zlim.oxy,
-                        label = label[3])
-dev.off()
-
-Quartz(dpi = 300, file = file.path(
-  SAVEPATH, "main", paste0(filebase, "04_oxy.pw.png")))
-plotCorrelationContours(oxy.pw, distances, color.palette, zlim = zlim.oxy.pw,
-                        label = label[4])
-dev.off()
-

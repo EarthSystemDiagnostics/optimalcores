@@ -9,7 +9,7 @@ The project is subdivided into three main components:
 - the `lib/` folder contains R library functions which provide the main functionality, and
 - the `analysis/` folder contains R code for the actual analyses.
 
-The **optimalcores** software is the basis for the manuscript Münch, Werner and Laepple, *How precipitation intermittency sets an optimal sampling distance for temperature reconstructions from Antarctic ice cores*, which is under review for the journal *Climate of the Past* and currently published as a discussion paper under [doi: 10.5194/cp-2020-128](https://doi.org/10.5194/cp-2020-128).
+The **optimalcores** software is the basis for the manuscript Münch, Werner and Laepple, *How precipitation intermittency sets an optimal sampling distance for temperature reconstructions from Antarctic ice cores*, Clim. Past, 2021.
 
 All code has been written by [Dr. Thomas Münch](https://www.awi.de/ueber-uns/organisation/mitarbeiter/thomas-muench.html) at the [Alfred Wegener Institute Helmholtz Centre for Polar and Marine Research](https://www.awi.de/). For further information, code enhancements or potential bugs, please write an email or open an issue here. This work was supported by Helmholtz funding through the Polar Regions and Coasts in the Changing Earth System (PACES) programme of the Alfred Wegener Institute.
 

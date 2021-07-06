@@ -8,27 +8,35 @@
 ##' Select climate model data
 ##'
 ##' Select the data from a certain climate model simulation.
+##'
 ##' @param data length one character vector with the short name of the climate
-##' model simulation to load from the data folder. Defaults to \code{'past1000'}
-##' for the currently available ECHAM5-MPIOM-wiso past millennium simulation.
+##'   model simulation to load from the data folder. Defaults to
+##'   \code{'past1000'} for the currently available ECHAM5-MPIOM-wiso past
+##'   millennium simulation.
+##' @param threshold factor to define an outlier threshold applied to the time
+##'   series from each model grid cell; i.e., time series values which lie
+##'   above, or below, the time series' interquartile range times this factor
+##'   are defined as outliers and are set to \code{NA}. Note that the outlier
+##'   removal is only performed on the oxygen isotope and precipitation-weighted
+##'   oxygen isotope fields.
 ##' @return A list of 10 elements; each list element is a two-dimensional array
-##' (time, position) with the time series for the respective model variable. The
-##' variables are:
-##' * \code{t2m}: annual mean 2 metre temperature
-##' * \code{t2m.pw}: annual mean 2 metre temperature precipitation-weighted
-##' * \code{oxy}: annual mean d18O of precipitation
-##' * \code{oxy.pw}: annual mean d18O of precipitation precipitation-weighted
-##' * \code{prc}: annual precipitation
-##' * \code{lnd.t2m}: as above but only for continental Antarctic sites
-##' * \code{lnd.t2m.pw}: as above but only for continental Antarctic sites
-##' * \code{lnd.oxy}: as above but only for continental Antarctic sites
-##' * \code{lnd.oxy.pw}: as above but only for continental Antarctic sites
-##' * \code{lnd.prc}: as above but only for continental Antarctic sites.
-##' The first five list elements are \code{"pField"} objects, the latter five
-##' are \code{"pTs"} objects.
+##'   (time, position) with the time series for the respective model
+##'   variable. The variables are:
+##'   * \code{t2m}: annual mean 2 metre temperature
+##'   * \code{t2m.pw}: annual mean 2 metre temperature precipitation-weighted
+##'   * \code{oxy}: annual mean d18O of precipitation
+##'   * \code{oxy.pw}: annual mean d18O of precipitation precipitation-weighted
+##'   * \code{prc}: annual precipitation
+##'   * \code{lnd.t2m}: as above but only for continental Antarctic sites
+##'   * \code{lnd.t2m.pw}: as above but only for continental Antarctic sites
+##'   * \code{lnd.oxy}: as above but only for continental Antarctic sites
+##'   * \code{lnd.oxy.pw}: as above but only for continental Antarctic sites
+##'   * \code{lnd.prc}: as above but only for continental Antarctic sites.
+##'   The first five list elements are \code{"pField"} objects, the latter five
+##'   are \code{"pTs"} objects.
 ##' @seealso \code{\link[pfields]{pField}}, \code{\link[pfields]{pTs}}
 ##' @author Thomas Münch
-selectData <- function(data = "past1000") {
+selectData <- function(data = "past1000", threshold = 4) {
 
   # Load data set
 
@@ -57,8 +65,10 @@ selectData <- function(data = "past1000") {
 
   res$t2m    <- tsfld.ann$t2m
   res$t2m.pw <- tsfld.ann$t2m.pw
-  res$oxy    <- tsfld.ann$oxy
-  res$oxy.pw <- tsfld.ann$oxy.pw
+  res$oxy    <- ApplyTime(tsfld.ann$oxy, removeOutlier,
+                          threshold = threshold)
+  res$oxy.pw <- ApplyTime(tsfld.ann$oxy.pw, removeOutlier,
+                          threshold = threshold)
   res$prc    <- tsfld.ann$prc
 
   # filter out sites only containing NA (ocean sites)
@@ -73,6 +83,45 @@ selectData <- function(data = "past1000") {
   return(res)
 
 }
+
+##' Locate outliers
+##'
+##' Find the positions in a time series at which the values exceed a certain
+##' threshold.
+##'
+##' @param x a time series to analyse.
+##' @param threshold factor to define the outlier threshold; i.e., values which
+##'   lie above, or below, the data's interquartile range times this factor are
+##'   defined as outliers.
+##' @return the index positions in \code{x} of the outliers or \code{integer(0)}
+##'   if no outliers are found.
+##' @author Thomas Münch
+locateOutlier <- function(x, threshold) {
+
+  lower.whisker <- boxplot(x, range = threshold, plot = FALSE)$stats[1, 1]
+  upper.whisker <- boxplot(x, range = threshold, plot = FALSE)$stats[5, 1]
+
+  c(which(x < lower.whisker), which(x > upper.whisker))
+
+}
+
+##' Remove outliers
+##'
+##' Find the positions in a time series at which the values exceed a certain
+##' threshold and set these values to \code{NA}.
+##'
+##' @param x a time series to analyse.
+##' @param threshold factor to define the outlier threshold; i.e., values which
+##'   lie above, or below, the data's interquartile range times this factor are
+##'   defined as outliers.
+##' @return the input time series with outliers removed.
+##' @author Thomas Münch
+removeOutlier <- function(x, threshold) {
+
+  if (length(i <- locateOutlier(x, threshold))) x[i] <- NA
+  return(x)
+}
+
 
 ##' Select a target site
 ##'
@@ -164,13 +213,13 @@ setTarget <- function(field, site = "edml", lat0 = NULL, lon0 = NULL) {
     # is pField
     res$dist <-
       pfields::GetDistanceField(field,
-                                  lat = lat0, lon = lon0,
-                                  get.nearest = TRUE)
+                                lat = lat0, lon = lon0,
+                                get.nearest = TRUE)
     
   } else {
     # is pTs
     res$dist <-
-      ecustools::GetDistance(lat0 = lat0, lon0 = lon0,
+      geostools::GetDistance(lat0 = lat0, lon0 = lon0,
                              lat = pfields::GetLat(field[, i.sel]),
                              lon = pfields::GetLon(field[, i.sel]),
                              get.nearest = TRUE)
@@ -232,8 +281,8 @@ setTargetRegion <- function(field,
 
     mid.lat <- (min.lat + max.lat) / 2
     mid.lon <- (min.lon + max.lon) / 2
-    x <- ecustools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
-    y <- ecustools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
+    x <- geostools::GetDistance(mid.lat, mid.lon, mid.lat, max(lons))
+    y <- geostools::GetDistance(mid.lat, mid.lon, min(lats), mid.lon)
 
     midpoint.border.distances <- c(x = x, y = y)
     cat(sprintf("Midpoint-border distances:\nx = %4.0f, y = %4.0f.\n",
