@@ -27,7 +27,8 @@ if (interactive()) {
 
   cmd.arg <- commandArgs(trailingOnly = TRUE)
   if (!length(cmd.arg)) {
-    stop("Please specify a command line option for running the simulation.")
+    stop("Please specify 'dml' or 'vostok' as command line option ",
+         "for running the simulation.")
   }
 }
 
@@ -51,8 +52,9 @@ if (cmd.arg == "dml") {
 
 } else {
 
-  stop(sprintf("Unknown command line option '%s' to select analysis region.",
-               cmd.arg))
+  stop(sprintf(
+    paste("Unknown command line option '%s' to select analysis region;",
+          "possible options are 'dml' or 'vostok' only."), cmd.arg))
 }
 
 # ------------------------------------------------------------------------------
